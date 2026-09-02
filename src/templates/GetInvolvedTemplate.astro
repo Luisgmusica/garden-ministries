@@ -1,0 +1,69 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import { ui } from '@/i18n/ui';
+import type { Locale } from '@/i18n/locales';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui[locale];
+const g = t.getInvolved;
+const icons = ['message-heart', 'hand-heart', 'church', 'building'] as const;
+---
+
+<BaseLayout locale={locale} path="/get-involved" title={g.eyebrow} description={g.description}>
+  <PageHero eyebrow={g.eyebrow} title={g.title} description={g.description} />
+  <section class="bg-white py-16">
+    <div class="container-page grid gap-12 lg:grid-cols-[1fr_.9fr]">
+      <div class="grid gap-4 sm:grid-cols-2">
+        {g.options.map(([title, text], index) => (
+          <article class="rounded-3xl border border-forest/10 bg-cream/50 p-6">
+            <Icon name={icons[index]} class="size-6 text-clay" />
+            <h2 class="mt-7 font-heading text-2xl font-semibold text-forest">{title}</h2>
+            <p class="mt-3 text-sm leading-7 text-forest/65">{text}</p>
+          </article>
+        ))}
+      </div>
+      <div class="rounded-[2rem] bg-forest p-7 text-cream sm:p-9">
+        <h2 class="font-heading text-3xl font-semibold">{g.formTitle}</h2>
+        <p class="mt-3 text-sm leading-7 text-cream/60">{g.formText}</p>
+
+        <div id="contact-sent" class="mt-8 hidden items-start gap-3 rounded-2xl bg-white/8 p-5">
+          <Icon name="check-circle" class="mt-0.5 size-5 shrink-0 text-[#e6a98d]" />
+          <p class="text-sm leading-7">{g.sent}</p>
+        </div>
+
+        <form id="contact-form" class="mt-8 grid gap-4">
+          <label class="grid gap-2 text-sm">
+            <span>{g.name}</span>
+            <input required name="name" type="text" class="h-11 rounded-lg border border-cream/20 bg-white/8 px-3 text-cream placeholder:text-cream/35" />
+          </label>
+          <label class="grid gap-2 text-sm">
+            <span>{g.email}</span>
+            <input required name="email" type="email" class="h-11 rounded-lg border border-cream/20 bg-white/8 px-3 text-cream placeholder:text-cream/35" />
+          </label>
+          <label class="grid gap-2 text-sm">
+            <span>{g.message}</span>
+            <textarea required name="message" class="min-h-28 rounded-lg border border-cream/20 bg-white/8 px-3 py-2 text-cream placeholder:text-cream/35"></textarea>
+          </label>
+          <button type="submit" class="btn btn-cream mt-2 h-12">{g.send}</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('contact-form');
+  const sent = document.getElementById('contact-sent');
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    form.classList.add('hidden');
+    sent?.classList.remove('hidden');
+    sent?.classList.add('flex');
+  });
+</script>

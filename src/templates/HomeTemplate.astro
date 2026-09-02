@@ -1,0 +1,175 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import MissionCard from '@/components/MissionCard.astro';
+import heroImage from '@/assets/hero-idaho.jpg';
+import { ui } from '@/i18n/ui';
+import { localizedPath, type Locale } from '@/i18n/locales';
+import { missions } from '@/data/missions';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui[locale];
+const h = t.home;
+const pillarIcons = ['heart-handshake', 'users', 'church'] as const;
+const pathIcons = ['heart-handshake', 'sprout', 'eye'] as const;
+---
+
+<BaseLayout locale={locale} path="/" title={h.title} description={t.meta.defaultDescription}>
+  <section class="relative isolate overflow-hidden bg-cream">
+    <div class="absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-white/50 to-transparent"></div>
+    <div class="container-page grid gap-12 py-16 lg:grid-cols-[1.03fr_.97fr] lg:items-center lg:py-24">
+      <div class="max-w-2xl">
+        <p class="eyebrow mb-6">{h.eyebrow}</p>
+        <h1 class="font-heading text-5xl font-semibold leading-[1.02] tracking-[-0.04em] text-forest sm:text-6xl lg:text-7xl">
+          {h.title}
+        </h1>
+        <p class="mt-7 max-w-xl text-lg leading-8 text-forest/72">{h.intro}</p>
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+          <a href={localizedPath('/give', locale)} class="btn btn-primary h-13">
+            {h.give}
+            <Icon name="heart-handshake" class="ml-1 size-4" />
+          </a>
+          <a href={localizedPath('/missions', locale)} class="btn btn-outline h-13 bg-transparent hover:bg-white/70">
+            {h.explore}
+            <Icon name="arrow-right" class="ml-1 size-4" />
+          </a>
+        </div>
+        <div class="mt-10 flex items-start gap-3 border-t border-forest/15 pt-6 text-sm leading-6 text-forest/65">
+          <Icon name="shield-check" class="mt-0.5 size-5 shrink-0 text-clay" />
+          <p>{h.trust}</p>
+        </div>
+      </div>
+      <div class="relative lg:pl-5">
+        <div class="overflow-hidden rounded-[2.2rem] bg-forest shadow-[0_30px_80px_-36px_rgba(23,53,44,.65)]">
+          <Image
+            src={heroImage}
+            alt={h.heroImageAlt}
+            width={1200}
+            height={1500}
+            class="aspect-[4/5] w-full object-cover opacity-90 sm:aspect-[5/4] lg:aspect-[4/5]"
+            loading="eager"
+            fetchpriority="high"
+            widths={[480, 800, 1200]}
+            sizes="(min-width: 1024px) 45vw, 100vw"
+          />
+        </div>
+        <div class="absolute -bottom-6 -left-2 max-w-[280px] rounded-3xl border border-white/40 bg-white/92 p-5 shadow-xl backdrop-blur lg:-left-4">
+          <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-clay">{h.promise}</p>
+          <p class="mt-2 font-heading text-xl font-semibold leading-snug text-forest">{h.promiseText}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20" id="serve">
+    <div class="container-page">
+      <div class="grid gap-10 lg:grid-cols-[.8fr_1.2fr] lg:items-end">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-clay">{h.serveEyebrow}</p>
+          <h2 class="mt-4 font-heading text-4xl font-semibold tracking-tight text-forest sm:text-5xl">{h.serveTitle}</h2>
+        </div>
+        <p class="max-w-2xl text-base leading-8 text-forest/65 lg:justify-self-end">{h.serveIntro}</p>
+      </div>
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        {h.pillars.map(([title, text], index) => (
+          <article class="rounded-[1.5rem] border border-forest/10 bg-cream/65 p-6">
+            <span class="grid size-11 place-items-center rounded-2xl bg-sage text-forest">
+              <Icon name={pillarIcons[index]} class="size-5" />
+            </span>
+            <h3 class="mt-8 font-heading text-2xl font-semibold text-forest">{title}</h3>
+            <p class="mt-3 text-sm leading-7 text-forest/65">{text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-cream py-20">
+    <div class="container-page">
+      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div class="max-w-3xl">
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-clay">{h.missionEyebrow}</p>
+          <h2 class="mt-4 font-heading text-4xl font-semibold tracking-tight text-forest sm:text-5xl">{h.missionTitle}</h2>
+          <p class="mt-5 max-w-2xl leading-7 text-forest/65">{h.missionIntro}</p>
+        </div>
+        <a href={localizedPath('/missions', locale)} class="flex items-center gap-2 font-semibold text-forest hover:text-clay">
+          {h.allMissions}
+          <Icon name="arrow-right" class="size-4" />
+        </a>
+      </div>
+      <div class="mt-10 grid gap-5 lg:grid-cols-3">
+        {missions.map((mission) => <MissionCard mission={mission} locale={locale} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-forest py-20 text-cream">
+    <div class="container-page grid gap-12 lg:grid-cols-[.85fr_1.15fr]">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#e6a98d]">{h.pathEyebrow}</p>
+        <h2 class="mt-4 font-heading text-4xl font-semibold tracking-tight sm:text-5xl">{h.pathTitle}</h2>
+        <p class="mt-5 max-w-xl leading-8 text-cream/65">{h.pathIntro}</p>
+      </div>
+      <div class="grid gap-4">
+        {h.path.map(([title, text], index) => (
+          <div class="grid grid-cols-[auto_1fr] gap-5 rounded-3xl border border-cream/12 bg-white/5 p-5">
+            <span class="grid size-11 place-items-center rounded-2xl bg-cream text-forest">
+              <Icon name={pathIcons[index]} class="size-5" />
+            </span>
+            <div>
+              <p class="font-heading text-2xl font-semibold">{title}</p>
+              <p class="mt-2 text-sm leading-7 text-cream/60">{text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20" id="impact">
+    <div class="container-page grid gap-10 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
+      <div class="rounded-[2rem] bg-sage/65 p-8 sm:p-10">
+        <div class="grid gap-4 sm:grid-cols-2">
+          {['INTERNAL', 'PARTNER', 'DONOR', 'PUBLIC'].map((label, index) => (
+            <div class={`rounded-2xl border border-forest/10 p-5 ${index === 3 ? 'bg-forest text-cream' : 'bg-white/70 text-forest'}`}>
+              <p class="text-[10px] font-bold tracking-[0.2em] opacity-60">{label}</p>
+              <div class="mt-8 h-2 w-3/4 rounded-full bg-current opacity-15"></div>
+              <div class="mt-2 h-2 w-1/2 rounded-full bg-current opacity-15"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-clay">{h.impactEyebrow}</p>
+        <h2 class="mt-4 font-heading text-4xl font-semibold tracking-tight text-forest sm:text-5xl">{h.impactTitle}</h2>
+        <p class="mt-5 text-base leading-8 text-forest/65">{h.impactText}</p>
+        <a href={localizedPath('/impact', locale)} class="mt-8 inline-flex items-center gap-2 font-semibold text-forest hover:text-clay">
+          {h.impactLink}
+          <Icon name="arrow-right" class="size-4" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-clay px-5 py-16 text-cream lg:px-8">
+    <div class="mx-auto flex max-w-7xl flex-col gap-8 rounded-[2rem] border border-cream/18 p-7 sm:p-10 lg:flex-row lg:items-end lg:justify-between">
+      <div class="max-w-3xl">
+        <p class="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-cream/65">
+          <Icon name="leaf" class="size-4" />
+          {h.ctaEyebrow}
+        </p>
+        <h2 class="mt-4 font-heading text-4xl font-semibold tracking-tight sm:text-5xl">{h.ctaTitle}</h2>
+        <p class="mt-4 max-w-2xl leading-7 text-cream/72">{h.ctaText}</p>
+      </div>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <a href={localizedPath('/give', locale)} class="btn btn-cream h-12">{h.ctaGive}</a>
+        <a href={localizedPath('/get-involved', locale)} class="btn h-12 border border-cream/30 bg-transparent text-cream hover:bg-cream/10">{h.ctaJoin}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

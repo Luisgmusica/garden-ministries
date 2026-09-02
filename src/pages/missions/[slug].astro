@@ -1,0 +1,15 @@
+---
+import MissionDetailTemplate from '@/templates/MissionDetailTemplate.astro';
+import { missions } from '@/data/missions';
+
+export function getStaticPaths() {
+  return missions.map((mission) => ({
+    params: { slug: mission.slug },
+    props: { mission },
+  }));
+}
+
+const { mission } = Astro.props;
+---
+
+<MissionDetailTemplate locale="en" mission={mission} />

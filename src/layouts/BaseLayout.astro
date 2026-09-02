@@ -1,0 +1,96 @@
+---
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import type { Locale } from '@/i18n/locales';
+import { ui } from '@/i18n/ui';
+import '@/styles/global.css';
+
+interface Props {
+  locale: Locale;
+  /** Unprefixed path used to derive the canonical + hreflang alternates, e.g. "/about" or "/missions/community-water". */
+  path: string;
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { locale, path, title, description, ogImage = '/og.jpg' } = Astro.props;
+const t = ui[locale];
+
+const cleanPath = path === '/' ? '' : path;
+const enUrl = new URL(cleanPath || '/', Astro.site);
+const esUrl = new URL(`/es${cleanPath}` || '/es', Astro.site);
+const canonicalUrl = new URL(locale === 'en' ? cleanPath || '/' : `/es${cleanPath}`, Astro.site);
+const ogImageUrl = new URL(ogImage, Astro.site);
+
+const pageTitle = t.meta.titleTemplate.replace('%s', title);
+const pageDescription = description ?? t.meta.defaultDescription;
+
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NGO',
+  name: 'Garden Ministries',
+  alternateName: 'Garden Ministries Inc.',
+  url: String(new URL('/', Astro.site)),
+  logo: String(new URL('/favicon.svg', Astro.site)),
+  description: t.meta.defaultDescription,
+  foundingDate: '2006',
+  areaServed: ['Idaho, USA', 'International partner locations'],
+  address: {
+    '@type': 'PostalAddress',
+    addressRegion: 'ID',
+    addressCountry: 'US',
+  },
+  slogan: "To take Christ's message of hope to all people.",
+};
+---
+
+<!doctype html>
+<html lang={locale === 'en' ? 'en' : 'es'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="theme-color" content="#17352c" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="es" href={esUrl} />
+    <link rel="alternate" hreflang="x-default" href={enUrl} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Garden Ministries" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'es_ES'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} is:inline />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">{locale === 'en' ? 'Skip to content' : 'Saltar al contenido'}</a>
+    <Header locale={locale} path={path} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>

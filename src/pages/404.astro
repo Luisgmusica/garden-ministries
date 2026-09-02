@@ -1,0 +1,19 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const copy = {
+  en: { eyebrow: '404', title: 'This page took a different path.', text: "The page you're looking for doesn't exist or has moved.", cta: 'Back to home' },
+};
+const t = copy.en;
+---
+
+<BaseLayout locale="en" path="/404" title="Page not found">
+  <section class="bg-cream py-24">
+    <div class="container-page text-center">
+      <p class="eyebrow justify-center">{t.eyebrow}</p>
+      <h1 class="mt-5 font-heading text-5xl font-semibold text-forest sm:text-6xl">{t.title}</h1>
+      <p class="mx-auto mt-5 max-w-xl text-lg leading-8 text-forest/70">{t.text}</p>
+      <a href="/" class="btn btn-primary mt-9 inline-flex h-12">{t.cta}</a>
+    </div>
+  </section>
+</BaseLayout>

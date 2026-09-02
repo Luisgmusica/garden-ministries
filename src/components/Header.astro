@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@/assets/logo.png';
+import Icon from '@/components/Icon.astro';
+import { ui } from '@/i18n/ui';
+import { localizedPath, type Locale } from '@/i18n/locales';
+
+interface Props {
+  locale: Locale;
+  /** Unprefixed current path, e.g. "/about". */
+  path: string;
+}
+
+const { locale, path } = Astro.props;
+const t = ui[locale];
+const otherLocale: Locale = locale === 'en' ? 'es' : 'en';
+const otherLocaleHref = localizedPath(path, otherLocale);
+---
+
+<header class="sticky top-0 z-40 border-b border-forest/10 bg-cream/92 backdrop-blur-xl">
+  <div class="container-page flex h-20 items-center justify-between">
+    <a href={localizedPath('/', locale)} class="flex shrink-0 items-center" aria-label="Garden Ministries home">
+      <Image src={logo} alt="Garden Ministries" class="h-11 w-auto sm:h-12" widths={[240, 320]} sizes="240px" loading="eager" fetchpriority="high" />
+    </a>
+
+    <nav class="hidden items-center gap-7 text-sm font-medium text-forest/75 lg:flex" aria-label="Primary navigation">
+      {t.nav.map(([label, href]) => (
+        <a href={localizedPath(href, locale)} class="transition-colors hover:text-clay">{label}</a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        href={otherLocaleHref}
+        class="rounded-full px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-forest/70 transition-colors hover:text-clay"
+        aria-label={t.langSwitchLabel}
+        hreflang={otherLocale}
+      >
+        {otherLocale.toUpperCase()}
+      </a>
+      <a href={localizedPath('/give', locale)} class="btn btn-accent hidden h-11 sm:inline-flex">{t.giveNow}</a>
+
+      <button
+        type="button"
+        id="menu-toggle"
+        class="grid size-11 place-items-center rounded-full text-forest lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <Icon name="menu" class="size-5" data-icon="menu" />
+        <Icon name="close" class="hidden size-5" data-icon="close" />
+        <span class="sr-only" data-label={t.openMenu} data-label-close={t.closeMenu}>{t.openMenu}</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-nav" class="hidden border-t border-forest/10 bg-cream lg:hidden" hidden>
+    <nav class="container-page flex flex-col py-2" aria-label="Mobile navigation">
+      {t.nav.map(([label, href]) => (
+        <a href={localizedPath(href, locale)} class="rounded-xl px-2 py-4 text-lg font-semibold hover:bg-sage/60">{label}</a>
+      ))}
+    </nav>
+    <div class="container-page pb-6 pt-2">
+      <a href={localizedPath('/give', locale)} class="btn btn-accent h-12 w-full">{t.giveNow}</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const nav = document.getElementById('mobile-nav');
+  const menuIcon = toggle?.querySelector('[data-icon="menu"]');
+  const closeIcon = toggle?.querySelector('[data-icon="close"]');
+  const label = toggle?.querySelector('.sr-only');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    nav?.toggleAttribute('hidden', isOpen);
+    menuIcon?.classList.toggle('hidden', !isOpen);
+    closeIcon?.classList.toggle('hidden', isOpen);
+    if (label instanceof HTMLElement) {
+      label.textContent = isOpen ? label.dataset.label ?? '' : label.dataset.labelClose ?? '';
+    }
+  });
+</script>

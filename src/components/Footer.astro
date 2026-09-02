@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@/assets/logo.png';
+import Icon from '@/components/Icon.astro';
+import { ui } from '@/i18n/ui';
+import { localizedPath, type Locale } from '@/i18n/locales';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui[locale];
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-forest text-cream">
+  <div class="container-page grid gap-12 py-14 md:grid-cols-[1.3fr_.7fr_.7fr]">
+    <div class="max-w-md">
+      <div class="inline-flex rounded-2xl bg-cream px-4 py-3 shadow-sm">
+        <Image src={logo} alt="Garden Ministries" class="h-14 w-auto" widths={[220]} sizes="220px" />
+      </div>
+      <p class="mt-5 text-sm leading-7 text-cream/72">{t.footer.tagline}</p>
+    </div>
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.18em] text-cream/50">{t.footer.explore}</p>
+      <div class="mt-5 grid gap-3 text-sm">
+        {t.footer.exploreLinks.map(([label, href]) => (
+          <a href={localizedPath(href, locale)} class="hover:text-white">{label}</a>
+        ))}
+      </div>
+    </div>
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.18em] text-cream/50">{t.footer.connect}</p>
+      <div class="mt-5 grid gap-4 text-sm text-cream/78">
+        <p class="flex items-start gap-2"><Icon name="map-pin" class="mt-0.5 size-4 shrink-0" />{t.footer.location}</p>
+        <a class="flex items-start gap-2 hover:text-white" href={localizedPath('/get-involved', locale)}>
+          <Icon name="mail" class="mt-0.5 size-4 shrink-0" />{t.footer.contact}
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-cream/12">
+    <div class="container-page flex flex-col gap-2 py-5 text-xs text-cream/50 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} Garden Ministries Inc.</p>
+      <p>{t.footer.note}</p>
+    </div>
+  </div>
+</footer>

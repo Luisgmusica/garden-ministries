@@ -1,0 +1,20 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  as?: 'h1' | 'h2';
+}
+
+const { eyebrow, title, description, as: Tag = 'h1' } = Astro.props;
+---
+
+<section class="border-b border-forest/10 bg-cream">
+  <div class="container-page py-16 lg:py-20">
+    <p class="eyebrow">{eyebrow}</p>
+    <Tag class="mt-5 max-w-4xl font-heading text-5xl font-semibold leading-[1.04] tracking-[-0.035em] text-forest sm:text-6xl">
+      {title}
+    </Tag>
+    <p class="mt-6 max-w-2xl text-lg leading-8 text-forest/70">{description}</p>
+  </div>
+</section>

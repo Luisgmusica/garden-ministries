@@ -1,0 +1,71 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import { ui } from '@/i18n/ui';
+import { localizedPath, type Locale } from '@/i18n/locales';
+import type { Mission } from '@/data/missions';
+
+interface Props {
+  locale: Locale;
+  mission: Mission;
+}
+
+const { locale, mission } = Astro.props;
+const t = ui[locale];
+const d = t.missionDetail;
+
+const blocks = [
+  ['search-check', d.need, mission.need[locale]],
+  ['hand-heart', d.response, mission.response[locale]],
+  ['file-check', d.evidence, mission.evidence[locale]],
+] as const;
+---
+
+<BaseLayout
+  locale={locale}
+  path={`/missions/${mission.slug}`}
+  title={mission.title[locale]}
+  description={mission.summary[locale]}
+>
+  <PageHero eyebrow={mission.category[locale]} title={mission.title[locale]} description={mission.summary[locale]} />
+  <section class="bg-white py-16">
+    <div class="container-page">
+      <a href={localizedPath('/missions', locale)} class="inline-flex items-center gap-2 text-sm font-semibold text-forest/65 hover:text-clay">
+        <Icon name="arrow-left" class="size-4" />
+        {d.back}
+      </a>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2">
+        <div class="rounded-2xl bg-sage/55 p-5">
+          <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-forest/50">{d.status}</p>
+          <p class="mt-2 font-semibold text-forest">{mission.status[locale]}</p>
+        </div>
+        <div class="rounded-2xl bg-cream p-5">
+          <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-forest/50">{d.location}</p>
+          <p class="mt-2 font-semibold text-forest">{mission.location[locale]}</p>
+        </div>
+      </div>
+      <div class="mt-10 grid gap-5 lg:grid-cols-3">
+        {blocks.map(([icon, title, text]) => (
+          <article class="rounded-[1.6rem] border border-forest/10 p-6">
+            <Icon name={icon} class="size-6 text-clay" />
+            <h2 class="mt-8 font-heading text-2xl font-semibold text-forest">{title}</h2>
+            <p class="mt-4 text-sm leading-7 text-forest/65">{text}</p>
+          </article>
+        ))}
+      </div>
+      <div class="mt-10 rounded-[1.8rem] bg-forest p-7 text-cream sm:flex sm:items-center sm:justify-between sm:gap-8">
+        <p class="max-w-2xl text-sm leading-7 text-cream/68">{d.note}</p>
+        <div class="mt-6 flex shrink-0 flex-col gap-3 sm:mt-0">
+          <a href={`${localizedPath('/give', locale)}?mission=${mission.slug}`} class="btn btn-cream h-11">
+            {d.give}
+            <Icon name="arrow-right" class="size-4" />
+          </a>
+          <a href={localizedPath('/get-involved', locale)} class="text-center text-xs font-semibold text-cream/65 hover:text-cream">
+            {d.contact}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import MissionCard from '@/components/MissionCard.astro';
+import { ui } from '@/i18n/ui';
+import type { Locale } from '@/i18n/locales';
+import { missions } from '@/data/missions';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui[locale];
+const m = t.missionsIndex;
+---
+
+<BaseLayout locale={locale} path="/missions" title={m.eyebrow} description={m.description}>
+  <PageHero eyebrow={m.eyebrow} title={m.title} description={m.description} />
+  <section class="bg-white py-16">
+    <div class="container-page">
+      <div class="grid gap-5 lg:grid-cols-3">
+        {missions.map((mission) => <MissionCard mission={mission} locale={locale} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
