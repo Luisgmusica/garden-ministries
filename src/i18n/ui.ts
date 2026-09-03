@@ -42,7 +42,12 @@ export const ui = {
       promise: 'A simple promise',
       promiseText: 'Give. Act. See the impact.',
       trust: 'Christian service rooted in relationships, responsible stewardship, and evidence of impact.',
-      heroImageAlt: 'Golden farmland and rolling hills in Idaho',
+      heroImageAlts: [
+        'Volunteer lowering a rope into a hand-dug community well',
+        'Clean water visible at the bottom of a newly dug well',
+        'Community workers installing a concrete well ring',
+        'A completed well ring ready to provide clean water',
+      ],
       serveEyebrow: 'One mission, three expressions',
       serveTitle: 'Serving people without losing sight of the whole community.',
       serveIntro:
@@ -232,7 +237,12 @@ export const ui = {
       promise: 'Una promesa sencilla',
       promiseText: 'Dar. Actuar. Ver el impacto.',
       trust: 'Servicio cristiano basado en relaciones, administración responsable y evidencia del impacto.',
-      heroImageAlt: 'Campos dorados y colinas de Idaho',
+      heroImageAlts: [
+        'Voluntario bajando una cuerda a un pozo comunitario excavado a mano',
+        'Agua limpia visible en el fondo de un pozo recién excavado',
+        'Trabajadores comunitarios instalando un anillo de concreto para el pozo',
+        'Un anillo de pozo terminado listo para proveer agua limpia',
+      ],
       serveEyebrow: 'Una misión, tres expresiones',
       serveTitle: 'Servir a las personas sin perder de vista a toda la comunidad.',
       serveIntro:

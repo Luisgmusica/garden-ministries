@@ -1,3 +1,7 @@
+import type { ImageMetadata } from 'astro';
+import communityWaterImage from '@/assets/mission-community-water.jpg';
+import communityWaterVideoPoster from '@/assets/community-water-well-poster.jpg';
+
 export type Mission = {
   slug: string;
   tone: 'sage' | 'clay' | 'gold';
@@ -10,6 +14,17 @@ export type Mission = {
   need: { en: string; es: string };
   response: { en: string; es: string };
   evidence: { en: string; es: string };
+  // Only set when a real, safe-to-publish photo of this specific work
+  // exists. Missions without one stay text-only rather than use generic
+  // stock/AI imagery of unrelated people — consistent with this site's own
+  // stance that not every photo belongs online, and that authenticity
+  // matters more than a filled-in image slot.
+  image?: ImageMetadata;
+  imageAlt?: { en: string; es: string };
+  // Same reasoning as `image` — only set for real footage of this mission's
+  // own work.
+  video?: { src: string; poster: ImageMetadata };
+  videoLabel?: { en: string; es: string };
 };
 
 export const missions: Mission[] = [
@@ -61,6 +76,16 @@ export const missions: Mission[] = [
     evidence: {
       en: 'Partner reports and approved documentation are separated into internal, donor, and public-safe versions.',
       es: 'Los reportes y documentos aprobados se separan en versiones internas, para donantes y públicas.',
+    },
+    image: communityWaterImage,
+    imageAlt: {
+      en: 'Community workers installing a concrete well ring',
+      es: 'Trabajadores comunitarios instalando un anillo de concreto para el pozo',
+    },
+    video: { src: '/videos/community-water-well.mp4', poster: communityWaterVideoPoster },
+    videoLabel: {
+      en: 'Watch: looking down a completed community well',
+      es: 'Ver: vista hacia el interior de un pozo comunitario terminado',
     },
   },
   {

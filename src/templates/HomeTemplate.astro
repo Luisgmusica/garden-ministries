@@ -3,7 +3,10 @@ import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from '@/components/Icon.astro';
 import MissionCard from '@/components/MissionCard.astro';
-import heroImage from '@/assets/hero-idaho.jpg';
+import heroWell1 from '@/assets/hero-well-1.jpg';
+import heroWell2 from '@/assets/hero-well-2.jpg';
+import heroWell3 from '@/assets/hero-well-3.jpg';
+import heroWell4 from '@/assets/hero-well-4.jpg';
 import { ui } from '@/i18n/ui';
 import { localizedPath, type Locale } from '@/i18n/locales';
 import { missions } from '@/data/missions';
@@ -17,6 +20,7 @@ const t = ui[locale];
 const h = t.home;
 const pillarIcons = ['heart-handshake', 'users', 'church'] as const;
 const pathIcons = ['heart-handshake', 'sprout', 'eye'] as const;
+const heroImages = [heroWell1, heroWell2, heroWell3, heroWell4];
 ---
 
 <BaseLayout locale={locale} path="/" title={h.title} description={t.meta.defaultDescription}>
@@ -45,19 +49,43 @@ const pathIcons = ['heart-handshake', 'sprout', 'eye'] as const;
         </div>
       </div>
       <div class="relative lg:pl-5">
-        <div class="overflow-hidden rounded-[2.2rem] bg-forest shadow-[0_30px_80px_-36px_rgba(23,53,44,.65)]">
-          <Image
-            src={heroImage}
-            alt={h.heroImageAlt}
-            width={1200}
-            height={1500}
-            class="aspect-[4/5] w-full object-cover opacity-90 sm:aspect-[5/4] lg:aspect-[4/5]"
-            loading="eager"
-            fetchpriority="high"
-            widths={[480, 800, 1200]}
-            sizes="(min-width: 1024px) 45vw, 100vw"
-          />
+        <div
+          class="hero-carousel relative aspect-[4/5] overflow-hidden rounded-[2.2rem] bg-forest shadow-[0_30px_80px_-36px_rgba(23,53,44,.65)] sm:aspect-[5/4] lg:aspect-[4/5]"
+        >
+          {
+            heroImages.map((img, i) => (
+              <Image
+                src={img}
+                alt={h.heroImageAlts[i]}
+                width={1200}
+                height={1500}
+                data-hero-slide={i}
+                class:list={[
+                  'absolute inset-0 h-full w-full object-cover opacity-90 transition-opacity duration-[1200ms] ease-in-out',
+                  i === 0 ? 'opacity-90' : 'opacity-0',
+                ]}
+                loading="eager"
+                fetchpriority={i === 0 ? 'high' : 'low'}
+                widths={[480, 800, 1200]}
+                sizes="(min-width: 1024px) 45vw, 100vw"
+              />
+            ))
+          }
         </div>
+        <script>
+          const ROTATE_MS = 4000;
+          document.querySelectorAll<HTMLElement>('.hero-carousel').forEach((carousel) => {
+            const slides = Array.from(carousel.querySelectorAll<HTMLElement>('[data-hero-slide]'));
+            if (slides.length < 2) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            let index = 0;
+            setInterval(() => {
+              slides[index].classList.replace('opacity-90', 'opacity-0');
+              index = (index + 1) % slides.length;
+              slides[index].classList.replace('opacity-0', 'opacity-90');
+            }, ROTATE_MS);
+          });
+        </script>
         <div class="absolute -bottom-6 -left-2 max-w-[280px] rounded-3xl border border-white/40 bg-white/92 p-5 shadow-xl backdrop-blur lg:-left-4">
           <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-clay">{h.promise}</p>
           <p class="mt-2 font-heading text-xl font-semibold leading-snug text-forest">{h.promiseText}</p>

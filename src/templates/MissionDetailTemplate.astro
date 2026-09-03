@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
 import Icon from '@/components/Icon.astro';
@@ -35,6 +36,39 @@ const blocks = [
         <Icon name="arrow-left" class="size-4" />
         {d.back}
       </a>
+      {
+        (mission.image || mission.video) && (
+          <div class="mt-8 flex flex-wrap gap-5">
+            {mission.image && (
+              <div class="w-full max-w-sm overflow-hidden rounded-[1.8rem]">
+                <Image
+                  src={mission.image}
+                  alt={mission.imageAlt?.[locale] ?? ''}
+                  width={900}
+                  height={1125}
+                  class="aspect-[4/5] w-full object-cover"
+                  loading="eager"
+                  widths={[400, 640, 900]}
+                  sizes="(min-width: 640px) 384px, 100vw"
+                />
+              </div>
+            )}
+            {mission.video && (
+              <div class="w-full max-w-sm overflow-hidden rounded-[1.8rem] bg-forest">
+                <video
+                  class="aspect-[4/5] w-full object-cover"
+                  controls
+                  preload="none"
+                  poster={mission.video.poster.src}
+                  aria-label={mission.videoLabel?.[locale] ?? ''}
+                >
+                  <source src={mission.video.src} type="video/mp4" />
+                </video>
+              </div>
+            )}
+          </div>
+        )
+      }
       <div class="mt-8 grid gap-4 sm:grid-cols-2">
         <div class="rounded-2xl bg-sage/55 p-5">
           <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-forest/50">{d.status}</p>

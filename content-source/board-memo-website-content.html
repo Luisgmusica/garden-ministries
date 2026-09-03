@@ -1,0 +1,459 @@
+<title>Website Content Brief</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --paper: #f6f4ee;
+    --paper-raised: #ffffff;
+    --ink: #1b1d22;
+    --ink-soft: #4a4c53;
+    --muted: #75767c;
+    --line: #ddd7c9;
+    --line-strong: #c7bfa9;
+    --seal: #2b3a55;
+    --seal-soft: #eef1f6;
+    --approved: #3f5d44;
+    --approved-soft: #e7ede7;
+    --deferred: #8a6a2b;
+    --deferred-soft: #f3ecdb;
+    --flag: #a23b2e;
+    --flag-soft: #f6e8e5;
+    --font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --paper: #1a1b1f;
+      --paper-raised: #222329;
+      --ink: #ece9e1;
+      --ink-soft: #c2c0ba;
+      --muted: #93928d;
+      --line: #35363c;
+      --line-strong: #45464d;
+      --seal: #8fa3c7;
+      --seal-soft: #232a37;
+      --approved: #8fbb96;
+      --approved-soft: #202922;
+      --deferred: #d9b46a;
+      --deferred-soft: #2c2515;
+      --flag: #e08a7c;
+      --flag-soft: #2f1f1d;
+    }
+  }
+  :root[data-theme='dark'] {
+    --paper: #1a1b1f;
+    --paper-raised: #222329;
+    --ink: #ece9e1;
+    --ink-soft: #c2c0ba;
+    --muted: #93928d;
+    --line: #35363c;
+    --line-strong: #45464d;
+    --seal: #8fa3c7;
+    --seal-soft: #232a37;
+    --approved: #8fbb96;
+    --approved-soft: #202922;
+    --deferred: #d9b46a;
+    --deferred-soft: #2c2515;
+    --flag: #e08a7c;
+    --flag-soft: #2f1f1d;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .sheet {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 5rem;
+  }
+  h1, h2, h3 { font-family: var(--font-display); color: var(--ink); text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--seal); }
+
+  /* ---------- Memo header ---------- */
+  .memo-head {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 1.75rem;
+    margin-bottom: 2.25rem;
+  }
+  .memo-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--seal);
+    margin-bottom: 0.9rem;
+  }
+  .memo-head h1 {
+    font-size: clamp(1.8rem, 1.4rem + 1.6vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+  .memo-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.6rem 2rem;
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+  .memo-fields dt { color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.7rem; }
+  .memo-fields dd { margin: 0.15rem 0 0; color: var(--ink-soft); }
+
+  /* ---------- At-a-glance strip ---------- */
+  .glance {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-bottom: 2.75rem;
+  }
+  .glance div {
+    background: var(--paper-raised);
+    padding: 1rem 1.1rem;
+  }
+  .glance .num {
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--seal);
+    font-variant-numeric: tabular-nums;
+  }
+  .glance .label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.25rem;
+    line-height: 1.35;
+  }
+
+  section { margin-bottom: 3rem; }
+  section > h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+  .section-dek {
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin-bottom: 1.5rem;
+    font-size: 0.98rem;
+  }
+
+  .prose { max-width: 65ch; }
+  .prose p + p { margin-top: 0.9rem; }
+
+  /* ---------- Decision records ---------- */
+  .decision {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 1.1rem;
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .decision:last-child { border-bottom: 1px solid var(--line); }
+  .chip {
+    grid-row: 1;
+    align-self: start;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.28rem 0.55rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    height: fit-content;
+  }
+  .chip.done { background: var(--approved-soft); color: var(--approved); }
+  .chip.deferred { background: var(--deferred-soft); color: var(--deferred); }
+  .chip.excluded { background: var(--flag-soft); color: var(--flag); }
+  .chip.request { background: var(--seal-soft); color: var(--seal); }
+  .decision h3 { font-family: var(--font-body); font-size: 1.02rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .decision .why { color: var(--ink-soft); font-size: 0.93rem; max-width: 58ch; }
+  .decision .why b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Suggestions ---------- */
+  .suggestion {
+    position: relative;
+    padding: 1.4rem 1.5rem 1.4rem 3.6rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    margin-bottom: 0.9rem;
+  }
+  .suggestion .idx {
+    position: absolute;
+    left: 1.1rem;
+    top: 1.35rem;
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--line-strong);
+  }
+  .suggestion h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .suggestion p { color: var(--ink-soft); font-size: 0.93rem; max-width: 58ch; }
+  .suggestion .rec {
+    display: inline-block;
+    margin-top: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--seal);
+    background: var(--seal-soft);
+    padding: 0.22rem 0.5rem;
+    border-radius: 3px;
+  }
+
+  /* ---------- Sitrep stat strip (only where source figures are cited) ---------- */
+  .sitrep {
+    border-left: 3px solid var(--seal);
+    background: var(--seal-soft);
+    padding: 1rem 1.25rem;
+    margin: 1.1rem 0 0;
+  }
+  .sitrep .src {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--seal);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.6rem;
+  }
+  .sitrep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.75rem 1.5rem;
+  }
+  .sitrep-grid .v { font-family: var(--font-mono); font-weight: 600; font-size: 1.05rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .sitrep-grid .k { font-size: 0.74rem; color: var(--ink-soft); margin-top: 0.15rem; }
+
+  /* ---------- Open items ---------- */
+  .items { list-style: none; margin: 0; padding: 0; }
+  .items li {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .items li:last-child { border-bottom: 1px solid var(--line); }
+  .items .box {
+    flex-shrink: 0;
+    width: 1.05rem;
+    height: 1.05rem;
+    border: 1.5px solid var(--line-strong);
+    margin-top: 0.15rem;
+  }
+
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .glance { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+<div class="sheet">
+  <div class="memo-head">
+    <p class="memo-kicker">Garden Ministries · Digital Presence</p>
+    <h1>Website content update: real photography replaces stock imagery, with a documented review of what stays offline</h1>
+    <dl class="memo-fields">
+      <div><dt>Prepared for</dt><dd>Board of Directors</dd></div>
+      <div><dt>Date</dt><dd>September 2, 2026</dd></div>
+      <div><dt>Scope</dt><dd>garden-ministries.org — home &amp; mission pages</dd></div>
+      <div><dt>Status</dt><dd>Implemented locally, not yet deployed</dd></div>
+    </dl>
+  </div>
+
+  <div class="glance">
+    <div><div class="num">4</div><div class="label">real photos/frames now rotating on the homepage</div></div>
+    <div><div class="num">1</div><div class="label">mission page received real photo + video</div></div>
+    <div><div class="num">2</div><div class="label">stock/AI images reviewed and <em>not</em> used</div></div>
+    <div><div class="num">40+</div><div class="label">field photos reviewed and withheld from publication</div></div>
+  </div>
+
+  <section>
+    <h2>Summary</h2>
+    <p class="section-dek">The home page and one mission page now show real, current documentation of Garden's water-well work in place of a generic stock photograph. Two other mission pages were deliberately left text-only rather than filled with AI-generated stand-in photos of unrelated people. A separate batch of field photos from a partner's disaster response was reviewed and withheld for reasons detailed below.</p>
+    <div class="prose">
+      <p>The guiding rule throughout was the one already stated on this site's own Impact page: <em>not every photo, name, or location belongs online.</em> Every decision below — what went up, what stayed down, and what's proposed next — was made against that standard rather than against how complete a page looked.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What changed, and why</h2>
+    <p class="section-dek">Four editorial decisions, each recorded with its rationale.</p>
+
+    <div class="decision">
+      <span class="chip done">Done</span>
+      <div>
+        <h3>Homepage hero: stock Idaho landscape photo → rotating set of 4 real well-project photos</h3>
+        <p class="why">The previous hero image was a generic stock photograph with no connection to Garden's actual work. It's replaced by four real images from a documented well-construction project — two photographs and two frames drawn from project video — cross-fading every four seconds. No individual is identifiable in any of the four.</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="chip done">Done</span>
+      <div>
+        <h3>Community Water &amp; Relief mission page: added one real photo and one real video</h3>
+        <p class="why">This is the one mission with enough safe, real material on hand — a photo of the well-ring installation and a short video looking down a finished well. Both were re-encoded and checked for playback before publishing; neither shows an identifiable face or a placename.</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="chip deferred">Deferred by design</span>
+      <div>
+        <h3>Local Family Care &amp; Ministry Strengthening: kept text-only</h3>
+        <p class="why">Two AI-generated stock images were prepared as placeholders (volunteers serving a meal; a community garden). <b>They were not used.</b> Standing in fake photos of unconnected people to fill an empty slot works against the same authenticity this update is meant to build — better to show nothing until the ministry teams have their own photos to share.</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="chip excluded">Withheld</span>
+      <div>
+        <h3>~40 field photos and video from a Venezuela relief distribution: not published</h3>
+        <p class="why">This batch shows identifiable minors receiving aid, with no consent process on record, and includes a visible police-station sign that places the exact location. It also documents work led by a partner organization (see below), not a Garden-run program. None of it was used anywhere on the site.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Suggestions: telling the Venezuela earthquake response story</h2>
+    <p class="section-dek">
+      Separate from the withheld field photos, Garden holds a legitimate, tellable story here: a gift from Deer Flat, routed by Garden, helped fund Samaritan's Purse's emergency response to the Venezuela earthquake. That story can be told well without the photos above. Four options, in suggested order:
+    </p>
+
+    <div class="suggestion">
+      <span class="idx">1</span>
+      <h3>Link to Samaritan's Purse's own report and video, rather than re-hosting field photos</h3>
+      <p>Samaritan's Purse already publishes a public situation report and a produced video of this response. Pointing to their materials tells the story with imagery that already cleared their own consent and safety review — Garden doesn't need to (and shouldn't) republish the sensitive photos it received privately.</p>
+      <span class="rec">Recommended starting point</span>
+    </div>
+
+    <div class="suggestion">
+      <span class="idx">2</span>
+      <h3>A short "how your gift traveled" module, using aggregate figures only</h3>
+      <p>A brief narrative — Garden and Deer Flat directed a gift toward Samaritan's Purse's response; here's the scale of what that response reached — sourced from Samaritan's Purse's public sitrep, credited by name, with no names or images of individual recipients.</p>
+      <div class="sitrep">
+        <div class="src">From Samaritan's Purse situation report, Sept 1, 2026 — cite, don't restate as Garden's own</div>
+        <div class="sitrep-grid">
+          <div><div class="v">7,483</div><div class="k">patients treated</div></div>
+          <div><div class="v">39,195</div><div class="k">households assisted</div></div>
+          <div><div class="v">212</div><div class="k">pastors trained</div></div>
+          <div><div class="v">100</div><div class="k">local church partners</div></div>
+        </div>
+      </div>
+      <span class="rec">Pair with option 1</span>
+    </div>
+
+    <div class="suggestion">
+      <span class="idx">3</span>
+      <h3>Recognize Deer Flat as a partner church, independent of this one event</h3>
+      <p>A standing "Churches &amp; Partners" mention on Get Involved or About — not tied to any single disaster response — gives Deer Flat visible credit for the relationship without needing this specific story to carry it.</p>
+      <span class="rec">Low effort, no urgency</span>
+    </div>
+
+    <div class="suggestion">
+      <span class="idx">4</span>
+      <h3>Make this the worked example on the Impact page</h3>
+      <p>The Impact page already describes an internal → partner → donor → public review tiering for evidence, illustrated today with a placeholder graphic. This case — a real gift, a real partner, a public-safe summary — could become the actual example, making that policy concrete instead of abstract.</p>
+      <span class="rec">Longer-term, once 1–2 are live</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>What would help most next</h2>
+    <p class="section-dek">Concrete items that would materially improve the site, beyond what's already decided above.</p>
+
+    <div class="decision">
+      <span class="chip request">Consent process</span>
+      <div>
+        <h3>A standard photo/video release form for field visits</h3>
+        <p class="why">The Venezuela batch was withheld largely because there's no consent on record for the identifiable minors in it. A simple release process for future trips — used going forward by Garden's own team and asked of partners — means new material arrives already clear to publish, instead of reviewed and set aside after the fact.</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="chip request">Real photos</span>
+      <div>
+        <h3>Current, consented photos or video for Local Family Care and Ministry Strengthening</h3>
+        <p class="why">These are the two mission pages still text-only. Even a handful of real images — a distribution day, a training session, a pastor's home church — would let both pages match Community Water's treatment.</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="chip request">Captions &amp; names</span>
+      <div>
+        <h3>Sign-off and captions for the leadership family photo already on file</h3>
+        <p class="why">A posed family portrait is on hand and reads as appropriate for an About page, but it needs the board's confirmation that it's cleared for public use, plus names and roles to caption it correctly.</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="chip request">Verified numbers</span>
+      <div>
+        <h3>Board-approved figures for the Impact page, per mission</h3>
+        <p class="why">The Impact page currently withholds public numbers pending "leadership verification." Approved figures — families served, wells completed, funds distributed — would let that page speak in specifics instead of describing its own review process.</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="chip request">Org credentials</span>
+      <div>
+        <h3>501(c)(3)/EIN and financial-transparency documents</h3>
+        <p class="why">The site asks for trust ("A gift should not disappear after checkout") but doesn't yet show the standard donor trust signals — registered nonprofit status, a link to Form 990 or audited financials. Worth adding once donation processing itself is connected.</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="chip request">Partnership terms</span>
+      <div>
+        <h3>A clear description of the Samaritan's Purse relationship</h3>
+        <p class="why">To word the Venezuela story accurately (suggestion above), it helps to know exactly how Garden's role should be described — a one-time designated gift, an ongoing referral relationship, or something more formal — rather than assuming.</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <span class="chip request">Source media</span>
+      <div>
+        <h3>Original, higher-resolution photos or video from the well project</h3>
+        <p class="why">Two of the four hero images are still frames pulled from phone video, not native photographs — usable, but a notch below the two real photos in sharpness at large sizes. Original stills from that same visit, if any exist, would sharpen the hero further.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>For the board</h2>
+    <ul class="items">
+      <li><span class="box"></span><span>Confirm the Venezuela field photos stay unpublished, and that only Samaritan's Purse's own public materials are used if the earthquake story goes on the site.</span></li>
+      <li><span class="box"></span><span>Choose which of the four suggestions above to authorize, and in what order.</span></li>
+      <li><span class="box"></span><span>Confirm Deer Flat is comfortable being named publicly before any recognition goes live.</span></li>
+      <li><span class="box"></span><span>Decide whether to commission real photos for Local Family Care and Ministry Strengthening, or leave those pages text-only for now.</span></li>
+      <li><span class="box"></span><span>Approve deployment of the completed hero-carousel and Community Water updates to the live site.</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Prepared via Claude Code · content-source/ archive holds full source material and notes</span>
+    <span>Draft for internal board review</span>
+  </footer>
+</div>
