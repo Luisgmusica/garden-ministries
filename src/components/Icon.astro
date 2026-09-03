@@ -32,9 +32,10 @@ export type IconName =
 interface Props {
   name: IconName;
   class?: string;
+  [attr: string]: unknown;
 }
 
-const { name, class: className = 'size-5' } = Astro.props;
+const { name, class: className = 'size-5', ...rest } = Astro.props;
 ---
 
 <svg
@@ -47,6 +48,7 @@ const { name, class: className = 'size-5' } = Astro.props;
   stroke-linejoin="round"
   aria-hidden="true"
   focusable="false"
+  {...rest}
 >
   {name === 'heart-handshake' && (
     <>

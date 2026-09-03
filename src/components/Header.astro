@@ -54,7 +54,7 @@ const otherLocaleHref = localizedPath(path, otherLocale);
     </div>
   </div>
 
-  <div id="mobile-nav" class="hidden border-t border-forest/10 bg-cream lg:hidden" hidden>
+  <div id="mobile-nav" class="border-t border-forest/10 bg-cream lg:hidden" hidden>
     <nav class="container-page flex flex-col py-2" aria-label="Mobile navigation">
       {t.nav.map(([label, href]) => (
         <a href={localizedPath(href, locale)} class="rounded-xl px-2 py-4 text-lg font-semibold hover:bg-sage/60">{label}</a>
