@@ -19,5 +19,5 @@ export const contactEmail = 'info@garden-ministries.org';
  * Empty = online sending disabled: the page shows the email fallback instead of a form.
  * Local testing may override it at build time with PUBLIC_TURNSTILE_SITEKEY.
  */
-const PRODUCTION_TURNSTILE_SITEKEY = '';
+const PRODUCTION_TURNSTILE_SITEKEY = '0x4AAAAAAE25w_GKpgHYFzoH';
 export const turnstileSiteKey: string = import.meta.env.PUBLIC_TURNSTILE_SITEKEY || PRODUCTION_TURNSTILE_SITEKEY;
