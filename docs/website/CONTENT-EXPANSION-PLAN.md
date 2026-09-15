@@ -5,6 +5,12 @@ Implementation needs explicit authorization after the copy is reviewed. Source a
 
 ## 1. Approved decisions
 
+- **Purpose of Pray With Us (owner decision 2026-09-15):** Pray With Us is an informational ministry-content page explaining how
+  supporters can pray for the work Garden Ministries is doing. It is not a prayer-request submission platform and has no
+  prayer-management workflow — no forms, no mailto links, no submission buttons, no database, no notifications, no user-generated
+  content. Content is editorial (`src/data/prayer.ts`), updated when Garden provides new information. Test for every item:
+  "Does this help someone understand how to pray for something Garden Ministries is doing?" The owner's "Prayer Requests"
+  material is read as "ways to pray for what Garden is doing". Individual prayer points never end in donation CTAs.
 - `/pray` (EN) and `/es/pray` (ES). No `/es/orar`; English-slug convention stays.
 - Primary nav: Missions · Impact · About · **Pray / Orar** · Get involved · [Give now].
 - Mailing address on `/get-involved`, `/es/get-involved`, footer. Labelled as a mailing address; never a visitor location;
@@ -55,7 +61,7 @@ The Header needs no code change: it renders `ui.ts nav`. Verify the 5-item deskt
    left = icon tile in the mission tone, `h2`, intro, "Learn about this mission →", optional photo; right = requests as a list:
    `h3` (Georgia, text-xl) + paragraph, separated by `border-t border-forest/10`. No cards, no numbered circles, no donation CTA.
 5. Closing band (forest): "Pray. Connect. Give." + short text + `Get involved` (cream button) and `Give` (outline).
-6. Zero JavaScript. No form. "Share a prayer request" only after the info@ contact proposal is approved.
+6. Zero JavaScript. No form and no way to submit prayer needs of any kind (see Purpose in section 1).
 
 Images: Local Family Care — `Fotos/info/a.jpg` (primary) and optionally `c.jpg`; Community Water & Relief — existing well
 asset (`src/assets/mission-community-water.jpg` or `hero-well-2.jpg`); Strengthening Those Who Serve — text only (no image in
