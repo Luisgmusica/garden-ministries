@@ -1,6 +1,6 @@
 # Content expansion — round 1 (Pray With Us, mailing address, founders, testimonies)
 
-Status 2026-09-15: **implemented in `main`, validated, not deployed.** Architecture as built: `CURRENT-STATE.md`.
+Status 2026-09-15: **live in production and verified** (`580a2dc` deployed 19:25–19:29Z; founders photo update `73daed0` at 19:57Z). Architecture as built: `CURRENT-STATE.md`.
 The code is the source of truth for copy: `src/data/prayer.ts`, `src/i18n/ui.ts` (`pray`, `about`, `home`, `mailingAddress`),
 `src/data/testimonies.ts`, `src/data/organization.ts`. This file keeps decisions, editorial rationale and remaining work.
 
@@ -69,14 +69,13 @@ owner's longer heading (`Fortalecer a quienes sirven en el ministerio`).
 
 ## 4. Remaining
 
-1. **Release:** deploy `main` per `DEPLOY.md` after review (separately authorized). Then record it in `CHANGELOG.md` / `CURRENT-STATE.md`.
-2. **Push to GitHub** once `~/.ssh/id_ed25519` is loaded in the agent by the operator.
+1. ~~Release~~ — done 2026-09-15 (see `CHANGELOG.md`).
+2. ~~Push to GitHub~~ — done (`origin/main` = `73daed0`).
 3. **Testimony captions/transcripts** (per video: spoken language, transcript, EN/ES captions). Add `.vtt` files under
    `public/videos/testimonies/` and set `captions` in `testimonies.ts`. Optional owner-provided `name`, `summary`, `missionSlug`.
 4. **Fourth testimony (`ce85921e`):** when a clean original exists — encode with `scripts/media/encode-video.swift`
    (`… 960 900` for a landscape source), take a poster frame, add an entry to `testimonies.ts`. No component change.
-5. **Founders:** owner provided a clearer photo (`IMG_8418.png`); swapped into `src/assets/about/founders.jpg` in `main`
-   (not yet deployed). Names/roles only if the owner provides them.
+5. **Founders:** clearer owner photo `IMG_8418.png` is live (2026-09-15). Names/roles only if the owner provides them.
 6. **Prayer content upkeep:** edit `src/data/prayer.ts` (and `prayerUpdated`) when Garden shares new work to pray for.
-7. Not in this round: www redirect, Cache-Control, custom 404 in Nginx, `/missions/` heading order, re-encoding
+7. Not in this round: Spanish mobile header overflow at ≤ 390 px (accepted follow-up), www redirect, Cache-Control, custom 404 in Nginx, `/missions/` heading order, re-encoding
    `community-water-well.mp4`, contact form replacement (see `CURRENT-STATE.md` known issues, `CONTACT-INFO-PROPOSAL.md`).

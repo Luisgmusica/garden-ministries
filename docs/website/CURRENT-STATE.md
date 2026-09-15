@@ -1,4 +1,4 @@
-# Website — current state (updated 2026-09-15, content round 1)
+# Website — current state (updated 2026-09-15, content round 1 live)
 
 Canonical memory for the public website. Read before any website work. Evidence (repo, server, live HTTP)
 wins over this file: if they disagree, verify, fix this file, and note it in `CHANGELOG.md`.
@@ -18,10 +18,10 @@ the repo in the parent project's `docs/operations/` and are not repeated here.
 | | Value |
 |---|---|
 | Repository | `garden-ministries-astro/` (git, branch `main`), remote `git@github.com:Luisgmusica/garden-ministries.git` |
-| **Production** | Build of **`76e3181`** (baseline). Nginx on garden-prod-01, docroot `/var/www/garden-ministries` (`garden:garden`, dirs 755 / files 644, 52 files, ~15 MB). Last deploy 2026-09-11 ~02:23Z. Verified unchanged 2026-09-15. |
-| **Repo `main` (not deployed)** | Content round 1 on top of the baseline: `7495897` docs, `cdffe7a` trailing slashes, `9031916` Pray purpose, `2a4ec50` media, `5c71ce4` features, plus the docs commit that updates this file. Release candidate = `main` HEAD. |
-| Reproducibility | `76e3181` clean-clone build = production byte-for-byte (52 files, verified). `5c71ce4` clean-clone build = the validated release build byte-for-byte (82 files, ~32 MB). Docs commits do not change the build. |
-| GitHub | **Nothing since `8f77259` is pushed.** From this Mac, GitHub accepts `~/.ssh/id_ed25519`, but the key is passphrase-protected and not loaded in the SSH agent, so non-interactive pushes fail. Unblock (operator, types the passphrase): `ssh-add --apple-use-keychain ~/.ssh/id_ed25519`. Server clone `~/apps/garden-ministries` (at `8f77259`) is not used for deploys. |
+| **Production** | Build of **`73daed0`**. Nginx on garden-prod-01, docroot `/var/www/garden-ministries` (`garden:garden`, dirs 755 / files 644, 82 files, ~32 MB). Deploys 2026-09-15: content round 1 `580a2dc` at 19:25:34–19:29:47Z, founders photo `73daed0` at 19:57:31–19:57:36Z. Server manifest matched the build after each. |
+| Repo `main` | `73daed0` is live. Commits after it are post-deploy documentation only unless `CHANGELOG.md` says otherwise. |
+| Reproducibility | Clean clone of `73daed0` from GitHub → `npm ci` → `npm run build` = production byte-for-byte (82 files, manifest compared on the server). Docs commits do not change the build. |
+| GitHub | `origin/main` at `73daed0` verified after deploy (normal pushes, never forced). Pushing needs `~/.ssh/id_ed25519` in the SSH agent: it is passphrase-protected, so the operator runs `ssh-add --apple-use-keychain ~/.ssh/id_ed25519` in a real terminal. Server clone `~/apps/garden-ministries` is not used for deploys. |
 
 Rule: deploy only a committed SHA built from a clean clone (`DEPLOY.md`).
 
@@ -39,7 +39,7 @@ Rule: deploy only a committed SHA built from a clean clone (`DEPLOY.md`).
 - Brand tokens in `src/styles/global.css`: forest `#17352c`, cream `#f7f2e8`, clay `#a85234`, sage `#dfe7da`, gold `#d2a862`;
   Georgia headings, Inter body.
 
-## Routes (23 pages in `main`; production has 21)
+## Routes (23 pages, live)
 
 `/`, `/about/`, `/missions/`, `/missions/local-family-care/`, `/missions/community-water/`, `/missions/ministry-strengthening/`,
 `/impact/`, `/give/`, `/get-involved/`, **`/pray/`**, `/privacy/`, `/404` — each mirrored under `/es/…` (except 404).
@@ -81,7 +81,7 @@ submission buttons, database, notifications or user-generated content. Individua
 
 "The people behind Garden" replaces the former "History with room to grow" section: `src/assets/about/founders.jpg`
 (from owner-provided `IMG_8418.png`, 1280×960, a clearer digital copy of the same portrait; it replaced the earlier
-photo-of-a-print `IMG_8207.jpeg` in `main` on 2026-09-15; shown ≤ 36 rem wide) with caption "The founders of Garden Ministries", short text
+photo-of-a-print `IMG_8207.jpeg` on 2026-09-15, live since 19:57Z; shown ≤ 36 rem wide) with caption "The founders of Garden Ministries", short text
 (formed in Idaho in 2006 by its founders; relationships of trust), legal line, and `founders-family.jpg` (from `IMG_2511.jpeg`)
 full width, caption "The founders with their family". No names, titles or roles. Replacing a photo = replacing the asset file.
 
@@ -147,11 +147,11 @@ Isrrael's phone, personal email, title or name from the Connect graphic are **no
 
 ## Known issues
 
-1. **Not deployed:** production still serves the baseline; slash-less canonicals/links there still hit a 301 until `main` is released.
-2. **GitHub push blocked** (see Source ↔ production).
+1. **Browser cache after deploys:** with no `Cache-Control` headers, a returning visitor's browser may show pre-release HTML for a while (observed during verification; a reload with a query string showed the new page). See 7.
+2. **Spanish mobile header overflow** (~19 px at ≤ 390 px: "Donar ahora" pushes the menu button off-screen). Pre-existing — header unchanged since the baseline. Accepted follow-up, not part of content round 1.
 3. **Testimonies have no captions/transcripts** (WCAG 1.2.2 gap) — need owner-provided transcripts or human transcription.
 4. `ce85921e` testimony pending a clean original (watermark).
-5. Founders photo: the clearer owner-provided `IMG_8418` is in `main`; production shows the earlier photo of a print until the next deploy.
+5. **Verification caveat:** Chrome automation tabs can report `visibilityState: hidden`; Chrome then defers lazy images and video loading. Poster and playback checks need a visible tab.
 6. **www is not redirected** to the apex (one Nginx server block). Fix needs root (separate change).
 7. **No `Cache-Control`/`Expires`** (ETag/Last-Modified work). Safe later (root, `nginx -t`, reload, separately authorized):
    `/_astro/` `public, max-age=31536000, immutable`; `/videos/` long max-age is safe for `-vN` versioned files

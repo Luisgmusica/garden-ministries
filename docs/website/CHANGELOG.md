@@ -3,13 +3,39 @@
 Newest first. Times UTC. Reconstructed entries before 2026-09-15 cite their evidence; nothing here is inferred without it.
 Mail/server operations: parent project `docs/operations/CHANGELOG.md` (not in this repo).
 
-## 2026-09-15 — founders photo replaced (in `main`, not deployed)
+## 2026-09-15 — founders photo deployed (`73daed0`)
+
+- Pushed `580a2dc..73daed0`; `origin/main` verified. Clean clone from GitHub: check 0 errors, 23 pages, 82 files, byte-identical to the
+  verified local build; versus `580a2dc` only the 5 founders WebP files and EN/ES About HTML differ.
+- Backup `/home/garden/backups/garden-site/garden-ministries-20260915T195646Z-pre-founders-photo` (82 files, identical to production).
+- Dry run: 5 added, 5 deleted (old `_astro/founders.Bk4VoIf9_*`), 2 updated (`about/`, `es/about/`), 75 timestamp-only.
+- rsync 19:57:31–19:57:36Z, exit 0. Server manifest = build (82 files); `garden:garden` 644/755; Nginx config untouched, no reload.
+- Live: `/about/` and `/es/about/` 200 and reference only the new images; all 5 sizes 200 `image/webp`; old image 404; `/`, `/pray/`,
+  `/es/pray/`, `/get-involved/`, `/give/` (Zeffy markup), `/es/give/`, missions 200; testimony video 206; live 1152 px image reviewed.
+
+## 2026-09-15 — founders photo replaced (commit `73daed0`)
 
 - Owner request: use `Fotos/Owners and family /IMG_8418.png` (1280×960, same portrait, sharper, no print glare) instead of
   `IMG_8207.jpeg`. Converted to JPEG (quality 95) as `src/assets/about/founders.jpg`; original file unchanged (SHA-256 checked).
   No layout or copy change; alt text and caption unchanged.
 
-## 2026-09-15 — content round 1 (in `main`, NOT deployed)
+## 2026-09-15 — content round 1 deployed to production (`580a2dc`)
+
+- Operator pushed `8f77259..580a2dc` (normal push); `origin/main` verified by fetch and `ls-remote`.
+- Clean checkout of `580a2dc` from GitHub: `npm ci`, check 0 errors / 0 warnings, 23 pages, 82 files; byte-identical to the validated build.
+- Backup `/home/garden/backups/garden-site/garden-ministries-20260915T192453Z-pre-content-round-1` (52 files, identical to production).
+- Dry run: 31 added, 22 content updates, 29 timestamp-only, 1 deleted (`_astro/BaseLayout.B7uIMXwU.css`); no directories removed.
+- rsync 19:25:34–19:29:47Z, exit 0. Server manifest = build (82 files); `garden:garden` 644/755; Nginx config untouched, no reload.
+- Live verification: EN/ES routes 200; `/pray` → `/pray/` in one hop; canonical, hreflang and all 22 sitemap URLs end in `/`; crawl of every
+  sitemap page: 22 internal page links, all 200 and slash-terminated. Pray EN/ES: 0 forms/mailto, Venezuela only under Community Water &
+  Relief, Isaiah 40:31 KJV/RVR1960, mission link lands on `/pray/#community-water`. About: neutral captions, no names; founders and family
+  photos render. Mailing address EN/ES + footer. Zeffy form renders and is usable live (desktop and 390 px; no donation submitted).
+  Testimonies: posters render, no MP4 before interaction, only one plays at a time, MP4 206, watermarked video absent (404); playback
+  start visually confirmed by the owner (the automation tab was reported hidden, which defers media loading). 390 px EN pages: no overflow.
+- Found, not regressions: Spanish header overflow at ≤ 390 px (pre-existing, accepted follow-up); a returning browser showed cached
+  pre-release HTML (no `Cache-Control`). Runbook: `$SSH` variable form fails in zsh — `DEPLOY.md` now says to run in bash.
+
+## 2026-09-15 — content round 1 implemented (commits)
 
 - **Owner decisions:** Venezuela earthquake prayer under Community Water & Relief (Local Family Care stays Idaho-focused);
   Home testimonies with the three suitable videos, `ce85921e` (watermark) pending; `a.jpg`/`c.jpg` approved for /pray; founders

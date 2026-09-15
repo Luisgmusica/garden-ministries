@@ -22,6 +22,8 @@ Nginx site config) and the commands used for the 2026-09-11 deploys. Not re-exec
 
 ## Procedure
 
+Run these blocks in **bash** (start `bash` first on macOS): zsh does not word-split `$SSH`, so `$SSH $HOST …` fails there.
+
 ```bash
 REPO=/Users/luisgonzalez/Development/garden-ministries/garden-ministries-astro
 SSH="ssh -i $HOME/.ssh/garden_claude_deploy -o IdentitiesOnly=yes -o BatchMode=yes"
