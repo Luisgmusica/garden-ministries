@@ -1,60 +1,50 @@
 # Garden Ministries — Astro site
 
-Rebuild of the Garden Ministries public website on [Astro](https://astro.build), replacing the
-previous Next.js prototype (`pu/work/garden-ministries-site`). Same brand system (forest / cream /
-clay / sage, Georgia headings + Inter body), rebuilt for SEO and performance.
+Public website of Garden Ministries, live at **https://garden-ministries.org** (English at `/`, Spanish at `/es/`).
+Static [Astro](https://astro.build) build served by Nginx on the Garden server.
 
-## Why Astro for this
+**Before working on the site, read `docs/website/CURRENT-STATE.md`.** Deployment: `docs/website/DEPLOY.md`.
+History: `docs/website/CHANGELOG.md`. Mail/server operations docs live outside this repository (parent project `docs/operations/`).
 
-- **Zero client-side JS by default.** Every page ships as static HTML; the only JavaScript that
-  loads is the small, framework-free scripts for the mobile menu and the Give/Get Involved forms.
-  That keeps Lighthouse/Core Web Vitals scores high, which is itself an SEO signal.
-- **Built-in i18n routing.** English lives at the root (`/about`, `/missions/...`) and Spanish is
-  mirrored under `/es/...`, with proper `hreflang` alternates and an XML sitemap generated
-  automatically (`@astrojs/sitemap`).
-- **Optimized images out of the box.** `astro:assets` converts the logo and hero photo to
-  responsive WebP at build time (the hero photo alone went from a 295KB JPG to a 33–101KB WebP set).
+## Stack
+
+- Astro 7 (static output), Tailwind CSS 4, `@astrojs/sitemap`, image optimization via `astro:assets`.
+- Brand system: forest / cream / clay / sage / gold, Georgia headings + Inter body (`src/styles/global.css`).
+- Minimal client JavaScript: mobile menu, hero carousel, Zeffy embed loader, Get Involved placeholder form.
 
 ## Project structure
 
 ```
 src/
-  layouts/BaseLayout.astro     <head> — meta tags, canonical, hreflang, Open Graph, JSON-LD
-  components/                  Header, Footer, PageHero, MissionCard, Icon (inline SVG set)
+  layouts/BaseLayout.astro     <head>: meta, canonical, hreflang, Open Graph, JSON-LD
+  components/                  Header, Footer, PageHero, MissionCard, Icon (inline SVG), ZeffyDonationForm
   templates/                   One template per page type (Home, About, Missions, Give, ...)
-  pages/                       Thin English routes, each rendering a template
-  pages/es/                    Thin Spanish routes, same templates, locale="es"
-  i18n/ui.ts                   All copy, in English and Spanish, keyed by page
-  data/missions.ts             The three launch "Missions" (bilingual)
-  assets/                      Source images processed by astro:assets (logo, hero photo)
-public/                        robots.txt, sitemap output, favicons, manifest, og image
+  pages/                       Thin English routes rendering a template with locale="en"
+  pages/es/                    Thin Spanish routes, same templates, locale="es" (same slugs as English)
+  i18n/ui.ts                   All UI copy in English and Spanish, keyed by page
+  i18n/locales.ts              localizedPath() — the only localization helper
+  data/missions.ts             The three Missions (bilingual fields)
+  assets/                      Images optimized at build time
+public/                        robots.txt, favicons, manifest, og image, videos/ (served as-is)
+content-source/                Reference material and editorial notes — not built into the site
 ```
 
-To add a page: create a template in `src/templates/`, then two one-line wrapper files in
-`src/pages/` and `src/pages/es/` that import it and pass `locale="en"` / `locale="es"`.
+To add a page: create a template in `src/templates/`, then two one-line wrappers in `src/pages/` and `src/pages/es/`
+(same file name) passing `locale="en"` / `locale="es"`.
 
 ## Commands
 
 | Command | Action |
 | --- | --- |
-| `npm install` | install dependencies |
+| `npm ci` | install exact dependencies from the lockfile |
 | `npm run dev` | local dev server |
-| `npm run build` | production build to `dist/` (also runs image optimization + sitemap) |
-| `npm run preview` | serve the built `dist/` locally |
 | `npm run check` | Astro/TypeScript diagnostics |
+| `npm run build` | production build to `dist/` |
+| `npm run preview` | serve the built `dist/` locally |
 
-## Before launch — things intentionally left as TODOs
+## Current facts worth knowing
 
-1. **`astro.config.mjs` → `SITE_URL`** is the official production domain
-   (`https://garden-ministries.org`, apex — no www). Canonical URLs, hreflang tags, and the
-   sitemap all derive from this value.
-2. **Give page** is a working *preview* of the donation flow (frequency, amount, designation,
-   summary) with no payment processor wired up yet — matches the honesty of the original prototype
-   rather than claiming to process real donations.
-3. **Get Involved form** submits nothing anywhere yet; it's a client-side "submitted" state. Wire it
-   to a real endpoint (Formspree, Netlify Forms, a Worker, etc.) when ready.
-4. **Content** mirrors the identity/mission language already reviewed in
-   `documents/Analisis_Garden_Ministries.pdf` — historical claims, leadership bios, and financial
-   figures are still marked "pending verification" in the copy itself, on purpose.
-5. **Deploy target**: no hosting config included. Astro's static output (`dist/`) deploys as-is to
-   Netlify, Vercel, Cloudflare Pages, GitHub Pages, etc.
+- `SITE_URL` in `astro.config.mjs` (`https://garden-ministries.org`) drives canonical URLs, hreflang and the sitemap.
+- Giving is live through the Zeffy embed on `/give`.
+- The Get Involved contact form is a disclosed placeholder and sends nothing.
+- Production must always be built from a committed SHA via a clean clone — never from a working tree (see DEPLOY.md).
