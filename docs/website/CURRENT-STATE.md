@@ -12,6 +12,7 @@ the repo in the parent project's `docs/operations/` and are not repeated here.
 | `DEPLOY.md` | The only supported deployment procedure + rollback |
 | `CONTENT-EXPANSION-PLAN.md` | Content round 1: decisions, what was implemented, what remains |
 | `CONTACT-INFO-PROPOSAL.md` | Proposal to publish info@ (not applied) |
+| `CONTACT-FORM-AUDIT.md` | Audit of the Get Involved form and recommended secure architecture (not implemented) |
 
 ## Source ↔ production
 
@@ -118,7 +119,8 @@ untouched. Posters are frames from the encodes (`src/assets/testimonies/`). Capt
   Meridian, ID 83642. Shown in `<address>` with label "Mailing address" / "Dirección postal" and note "For mail only — not a
   visitor location." / "Solo para correspondencia; no es una oficina abierta al público." on `/get-involved/` (EN/ES, in the
   contact panel) and in the footer "Connect" column, which no longer shows the "Idaho, USA" map pin.
-- `/get-involved/` contact form is still a disclosed **placeholder** (see `CONTACT-INFO-PROPOSAL.md`). No email or phone published.
+- `/get-involved/` "Start a conversation" form is a **placeholder**: no action/method and no backend; its script fakes a success
+  message; without JavaScript it submits a GET that puts name/email/message in the URL. See `CONTACT-FORM-AUDIT.md`. No email or phone published.
 
 ## Source material authority (owner decisions, 2026-09-15)
 
@@ -159,4 +161,5 @@ Isrrael's phone, personal email, title or name from the Connect graphic are **no
 8. Nginx serves its default 404 page (no `error_page`); the Astro 404 page links to non-existent `/404/` and `/es/404/`.
 9. `/missions/` heading order jumps h1 → h3 (MissionCard titles) — pre-existing.
 10. `community-water-well.mp4` heavier than needed (≈3 MB achievable); its poster is unoptimized.
-11. `/get-involved/` placeholder form.
+11. `/get-involved/` form shows a false success and, without JavaScript, leaks its fields into the URL, browser history and the
+    Nginx access log. Audit and recommended fix: `CONTACT-FORM-AUDIT.md` (not implemented).

@@ -3,6 +3,14 @@
 Newest first. Times UTC. Reconstructed entries before 2026-09-15 cite their evidence; nothing here is inferred without it.
 Mail/server operations: parent project `docs/operations/CHANGELOG.md` (not in this repo).
 
+## 2026-09-15 — contact form audit (documentation only)
+
+- Read-only audit of the "Start a conversation" form (`GetInvolvedTemplate.astro`): no action/method, no backend, no email; JS
+  shows a false success; without JS the fields go into a GET URL (access log, history). No anti-abuse controls exist.
+- Recommended architecture and decisions recorded in `CONTACT-FORM-AUDIT.md` (Turnstile + honeypot, Nginx/service rate limits,
+  strict server validation, localhost-only `garden-contact` service delivering locally to info@ with fixed From/To and validated
+  Reply-To, privacy page update). Nothing implemented; no server, mail, DNS or third-party change.
+
 ## 2026-09-15 — founders photo deployed (`73daed0`)
 
 - Pushed `580a2dc..73daed0`; `origin/main` verified. Clean clone from GitHub: check 0 errors, 23 pages, 82 files, byte-identical to the

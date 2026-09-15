@@ -36,6 +36,8 @@ Validation: `npm run build`, check EN/ES pages locally, deploy through the usual
 
 ## Phase 2 — real form (optional, separate design)
 
+> Detailed audit and recommended architecture (2026-09-15): `CONTACT-FORM-AUDIT.md`. It supersedes the outline below.
+
 Only if a form is preferred over `mailto:`:
 - (a) Small dedicated endpoint on the Garden server that sends to info@ via local Postfix: honeypot field, per-IP rate limit,
   strict size/field validation, fixed From (a Garden system address) with `Reply-To:` = visitor, no attachments, logging without
