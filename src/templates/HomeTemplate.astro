@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from '@/components/Icon.astro';
 import MissionCard from '@/components/MissionCard.astro';
+import TestimoniesSection from '@/components/TestimoniesSection.astro';
 import heroWell1 from '@/assets/hero-well-1.jpg';
 import heroWell2 from '@/assets/hero-well-2.jpg';
 import heroWell3 from '@/assets/hero-well-3.jpg';
@@ -135,6 +136,8 @@ const heroImages = [heroWell1, heroWell2, heroWell3, heroWell4];
       </div>
     </div>
   </section>
+
+  <TestimoniesSection locale={locale} />
 
   <section class="bg-forest py-20 text-cream">
     <div class="container-page grid gap-12 lg:grid-cols-[.85fr_1.15fr]">

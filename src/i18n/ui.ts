@@ -10,12 +10,17 @@ export const ui = {
       ['Missions', '/missions'],
       ['Impact', '/impact'],
       ['About', '/about'],
+      ['Pray', '/pray'],
       ['Get involved', '/get-involved'],
     ],
     giveNow: 'Give now',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     langSwitchLabel: 'Cambiar a español',
+    mailingAddress: {
+      label: 'Mailing address',
+      note: 'For mail only — not a visitor location.',
+    },
     footer: {
       tagline:
         "Taking Christ's message of hope to all people through practical service, trusted relationships, and responsible stewardship.",
@@ -24,10 +29,10 @@ export const ui = {
         ['Missions', '/missions'],
         ['Impact', '/impact'],
         ['About', '/about'],
+        ['Pray', '/pray'],
         ['Privacy', '/privacy'],
       ],
       connect: 'Connect',
-      location: 'Idaho, USA',
       contact: 'Contact Garden',
       copyright: '© 2026 Garden Ministries Inc.',
       note: 'Secure giving · EIN 20-5133327',
@@ -62,6 +67,12 @@ export const ui = {
       missionIntro:
         "These launch categories reflect Garden's historical service. Funding amounts and public updates will only appear after leadership verification.",
       allMissions: 'View all missions',
+      testimoniesEyebrow: 'Testimonies',
+      testimoniesTitle: 'In their own words.',
+      testimoniesIntro:
+        'Garden Ministries grows through real people and relationships of trust. These testimonies were recorded for Garden and are shared here as they were given.',
+      testimonyPlay: 'Play testimony {n} of {total} ({duration})',
+      testimonyVideoLabel: 'Testimony {n} of {total}',
       pathEyebrow: 'Trust by design',
       pathTitle: 'A gift should not disappear after checkout.',
       pathIntro:
@@ -97,9 +108,13 @@ export const ui = {
         ['Trusted relationships', "Garden's value grows from people knowing people—donors, leaders, churches, partners, and communities."],
         ['Responsible stewardship', 'Resources should move through clear decisions, appropriate evidence, and respect for those being served.'],
       ],
-      historyTitle: 'History with room to grow',
-      history:
-        'The recovered record describes local service in Idaho and ministry relationships in protected international locations. Before historical claims, leadership biographies, or program totals are published, Garden will verify them against current organizational records.',
+      peopleTitle: 'The people behind Garden',
+      peopleText:
+        "Garden Ministries was formed in Idaho in 2006 by its founders to take Christ's message of hope to all people. Today the ministry continues to grow through relationships of trust among families, churches, leaders, and partners.",
+      foundersAlt: 'The founders of Garden Ministries smiling together outdoors',
+      foundersCaption: 'The founders of Garden Ministries',
+      familyAlt: 'The founders of Garden Ministries with their family, standing together on a lawn in front of trees',
+      familyCaption: 'The founders with their family',
       legal: 'Garden Ministries Inc. · Idaho · Formed 2006 · EIN 20-5133327',
     },
     missionsIndex: {
@@ -118,6 +133,7 @@ export const ui = {
       note: 'This is a launch-category page. Public financial goals and specific stories will be added only after leadership approval and privacy review.',
       give: 'Support this mission',
       contact: 'Ask about this Mission',
+      pray: 'Pray for this mission',
     },
     impact: {
       eyebrow: 'Impact',
@@ -150,16 +166,33 @@ export const ui = {
       secure:
         'Donations are processed securely by Zeffy. Card details are never stored on this website.',
     },
+    pray: {
+      eyebrow: 'Pray with us',
+      title: 'Join us in praying for the work Garden Ministries is doing.',
+      description:
+        'Supporting Garden Ministries is not only about giving. Here you can see what Garden is doing in each area of service and how to pray for the families, communities, and ministry workers involved.',
+      updated: 'Updated {date}',
+      intro:
+        'Prayer is one of the most important ways to stand with this work. Choose an area, read what Garden is doing, and pray for the people involved.',
+      onThisPage: 'Areas of prayer',
+      imageAlt: 'A man smiles and raises a cup during a shared meal at an outdoor table',
+      missionLink: 'Learn about this mission',
+      closingTitle: 'Pray. Connect. Give.',
+      closingText:
+        'Prayer is a complete way to stand with Garden Ministries. If you would also like to take part in other ways, there is room for you.',
+      closingConnect: 'Get involved',
+      closingGive: 'Give',
+    },
     getInvolved: {
       eyebrow: 'Get involved',
       title: 'There is more than one way to take part.',
       description:
         'Give, pray, volunteer, connect a church, or begin a conversation about partnership. Garden grows through trusted relationships.',
       options: [
-        ['Pray', "Receive and support prayer needs connected with Garden's service."],
-        ['Volunteer', 'Offer practical help as local opportunities are reviewed and scheduled.'],
-        ['Church partnership', 'Connect a congregation with Missions, giving, prayer, or service.'],
-        ['Ministry partnership', 'Begin a relationship review for aligned ministry work.'],
+        ['Pray', "Pray for the work Garden Ministries is doing in each area of service.", '/pray'],
+        ['Volunteer', 'Offer practical help as local opportunities are reviewed and scheduled.', ''],
+        ['Church partnership', 'Connect a congregation with Missions, giving, prayer, or service.', ''],
+        ['Ministry partnership', 'Begin a relationship review for aligned ministry work.', ''],
       ],
       formTitle: 'Start a conversation',
       formText: 'This preview stores no personal information. Submitting demonstrates the intended contact experience.',
@@ -195,12 +228,17 @@ export const ui = {
       ['Misiones', '/missions'],
       ['Impacto', '/impact'],
       ['Nosotros', '/about'],
+      ['Orar', '/pray'],
       ['Participa', '/get-involved'],
     ],
     giveNow: 'Donar ahora',
     openMenu: 'Abrir menú',
     closeMenu: 'Cerrar menú',
     langSwitchLabel: 'Switch to English',
+    mailingAddress: {
+      label: 'Dirección postal',
+      note: 'Solo para correspondencia; no es una oficina abierta al público.',
+    },
     footer: {
       tagline:
         'Llevando el mensaje de esperanza de Cristo a todas las personas mediante servicio práctico, relaciones de confianza y administración responsable.',
@@ -209,10 +247,10 @@ export const ui = {
         ['Misiones', '/missions'],
         ['Impacto', '/impact'],
         ['Nosotros', '/about'],
+        ['Orar', '/pray'],
         ['Privacidad', '/privacy'],
       ],
       connect: 'Conectar',
-      location: 'Idaho, EE. UU.',
       contact: 'Contactar a Garden',
       copyright: '© 2026 Garden Ministries Inc.',
       note: 'Donaciones seguras · EIN 20-5133327',
@@ -247,6 +285,12 @@ export const ui = {
       missionIntro:
         'Estas categorías iniciales reflejan el servicio histórico de Garden. Montos y actualizaciones públicas aparecerán únicamente después de verificación.',
       allMissions: 'Ver todas las misiones',
+      testimoniesEyebrow: 'Testimonios',
+      testimoniesTitle: 'En sus propias palabras.',
+      testimoniesIntro:
+        'Garden Ministries crece a través de personas reales y relaciones de confianza. Estos testimonios fueron grabados para Garden y se comparten aquí tal como fueron dados.',
+      testimonyPlay: 'Reproducir testimonio {n} de {total} ({duration})',
+      testimonyVideoLabel: 'Testimonio {n} de {total}',
       pathEyebrow: 'Confianza por diseño',
       pathTitle: 'Una donación no debe desaparecer después del pago.',
       pathIntro:
@@ -282,9 +326,13 @@ export const ui = {
         ['Relaciones confiables', 'El valor de Garden nace de personas que conocen a personas: donantes, líderes, iglesias, partners y comunidades.'],
         ['Administración responsable', 'Los recursos deben moverse mediante decisiones claras, evidencia apropiada y respeto por quienes reciben ayuda.'],
       ],
-      historyTitle: 'Historia con espacio para crecer',
-      history:
-        'La información recuperada describe servicio local en Idaho y relaciones ministeriales en ubicaciones internacionales protegidas. Antes de publicar afirmaciones históricas, biografías o cifras, Garden las verificará con sus registros actuales.',
+      peopleTitle: 'Las personas detrás de Garden',
+      peopleText:
+        'Garden Ministries fue constituido en Idaho en 2006 por sus fundadores para llevar el mensaje de esperanza de Cristo a todas las personas. Hoy el ministerio sigue creciendo mediante relaciones de confianza entre familias, iglesias, líderes y partners.',
+      foundersAlt: 'Los fundadores de Garden Ministries sonriendo juntos al aire libre',
+      foundersCaption: 'Los fundadores de Garden Ministries',
+      familyAlt: 'Los fundadores de Garden Ministries con su familia, de pie sobre el césped frente a los árboles',
+      familyCaption: 'Los fundadores junto a su familia',
       legal: 'Garden Ministries Inc. · Idaho · Fundado en 2006 · EIN 20-5133327',
     },
     missionsIndex: {
@@ -303,6 +351,7 @@ export const ui = {
       note: 'Esta es una categoría inicial. Metas financieras e historias específicas se añadirán únicamente después de aprobación y revisión de privacidad.',
       give: 'Apoyar esta misión',
       contact: 'Preguntar sobre esta Mission',
+      pray: 'Ora por esta misión',
     },
     impact: {
       eyebrow: 'Impacto',
@@ -335,16 +384,33 @@ export const ui = {
       secure:
         'Las donaciones se procesan de forma segura a través de Zeffy. Los datos de tu tarjeta nunca se almacenan en este sitio.',
     },
+    pray: {
+      eyebrow: 'Ora con nosotros',
+      title: 'Únete a nosotros en oración por la obra que realiza Garden Ministries.',
+      description:
+        'Apoyar a Garden Ministries no se trata solo de dar. Aquí puedes ver lo que Garden está haciendo en cada área de servicio y cómo orar por las familias, las comunidades y los servidores que forman parte de ella.',
+      updated: 'Actualizado en {date}',
+      intro:
+        'La oración es una de las formas más importantes de acompañar esta obra. Elige un área, conoce lo que Garden está haciendo y ora por las personas involucradas.',
+      onThisPage: 'Áreas de oración',
+      imageAlt: 'Un hombre sonríe y levanta un vaso durante una comida compartida en una mesa al aire libre',
+      missionLink: 'Conoce esta misión',
+      closingTitle: 'Ora. Participa. Dona.',
+      closingText:
+        'La oración es una forma completa de acompañar a Garden Ministries. Si además deseas participar de otras maneras, hay lugar para ti.',
+      closingConnect: 'Participa',
+      closingGive: 'Donar',
+    },
     getInvolved: {
       eyebrow: 'Participa',
       title: 'Existe más de una forma de ser parte.',
       description:
         'Dona, ora, sirve, conecta una iglesia o comienza una conversación de partnership. Garden crece mediante relaciones confiables.',
       options: [
-        ['Orar', 'Recibir y apoyar necesidades de oración relacionadas con el servicio de Garden.'],
-        ['Servir', 'Ofrecer ayuda práctica cuando las oportunidades locales sean revisadas y programadas.'],
-        ['Partnership con iglesias', 'Conectar una congregación con Missions, donaciones, oración o servicio.'],
-        ['Partnership ministerial', 'Comenzar una revisión de relación para trabajo ministerial compatible.'],
+        ['Orar', 'Ora por la obra que Garden Ministries realiza en cada área de servicio.', '/pray'],
+        ['Servir', 'Ofrecer ayuda práctica cuando las oportunidades locales sean revisadas y programadas.', ''],
+        ['Partnership con iglesias', 'Conectar una congregación con Missions, donaciones, oración o servicio.', ''],
+        ['Partnership ministerial', 'Comenzar una revisión de relación para trabajo ministerial compatible.', ''],
       ],
       formTitle: 'Comienza una conversación',
       formText: 'Esta vista no almacena información personal. Enviar demuestra la experiencia de contacto prevista.',

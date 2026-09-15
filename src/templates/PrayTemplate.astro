@@ -1,0 +1,132 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import sharedMeal from '@/assets/pray/shared-meal.jpg';
+import { ui } from '@/i18n/ui';
+import { localizedPath, type Locale } from '@/i18n/locales';
+import { missions, type Mission } from '@/data/missions';
+import { prayerCategories, prayerUpdated } from '@/data/prayer';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui[locale];
+const p = t.pray;
+
+const updatedMonth = new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es', {
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(new Date(`${prayerUpdated}-01T00:00:00Z`));
+
+// Same tones as MissionCard so each prayer area reads as the matching mission.
+const toneClasses: Record<Mission['tone'], string> = {
+  sage: 'bg-sage/70',
+  clay: 'bg-[#ead6cc]',
+  gold: 'bg-[#eee3c6]',
+};
+
+const sections = prayerCategories.map((category) => ({
+  category,
+  mission: missions.find((mission) => mission.slug === category.id)!,
+}));
+---
+
+<BaseLayout locale={locale} path="/pray" title={p.eyebrow} description={p.description}>
+  <PageHero eyebrow={p.eyebrow} title={p.title} description={p.description} />
+
+  <section class="bg-white py-14 lg:py-16">
+    <div class="container-page grid gap-10 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
+      <div class="max-w-2xl">
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-clay">{p.updated.replace('{date}', updatedMonth)}</p>
+        <p class="mt-5 font-heading text-2xl leading-snug text-forest sm:text-3xl">{p.intro}</p>
+        <nav aria-label={p.onThisPage} class="mt-8 border-t border-forest/10 pt-6">
+          <ul role="list" class="grid gap-3 text-sm font-semibold">
+            {
+              sections.map(({ category }) => (
+                <li>
+                  <a href={`#${category.id}`} class="inline-flex items-center gap-2 text-forest hover:text-clay">
+                    <Icon name="arrow-right" class="size-4 text-clay" />
+                    {category.title[locale]}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+      <div class="mx-auto w-full max-w-md lg:mr-0">
+        <Image
+          src={sharedMeal}
+          alt={p.imageAlt}
+          widths={[400, 600, 780]}
+          sizes="(min-width: 1024px) 28rem, (min-width: 640px) 28rem, 100vw"
+          class="aspect-[4/3] w-full rounded-[2rem] object-cover object-[center_30%] sm:aspect-[4/5]"
+        />
+      </div>
+    </div>
+  </section>
+
+  {
+    sections.map(({ category, mission }, index) => (
+      <section
+        id={category.id}
+        aria-labelledby={`${category.id}-title`}
+        class:list={['scroll-mt-24 py-16 lg:py-20', index % 2 === 0 ? 'bg-cream' : 'bg-white']}
+      >
+        <div class="container-page grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
+          <div>
+            <span class={`grid size-12 place-items-center rounded-2xl text-forest ${toneClasses[mission.tone]}`}>
+              <Icon name={mission.icon} class="size-5" />
+            </span>
+            <h2 id={`${category.id}-title`} class="mt-6 font-heading text-4xl font-semibold tracking-tight text-forest">
+              {category.title[locale]}
+            </h2>
+            <p class="mt-4 max-w-md leading-7 text-forest/70">{category.intro[locale]}</p>
+            <a
+              href={localizedPath(`/missions/${mission.slug}`, locale)}
+              class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-forest hover:text-clay"
+            >
+              {p.missionLink}
+              <Icon name="arrow-right" class="size-4" />
+            </a>
+            {mission.image && (
+              <Image
+                src={mission.image}
+                alt={mission.imageAlt?.[locale] ?? ''}
+                widths={[400, 640]}
+                sizes="(min-width: 1024px) 24rem, 100vw"
+                class="mt-8 hidden aspect-[4/3] w-full max-w-sm rounded-[1.6rem] object-cover lg:block"
+              />
+            )}
+          </div>
+          <ul role="list" class="divide-y divide-forest/10 border-y border-forest/10">
+            {category.points.map((point) => (
+              <li class="py-6">
+                <h3 class="font-heading text-xl font-semibold text-forest">{point.title[locale]}</h3>
+                <p class="mt-2 leading-7 text-forest/75">{point.text[locale]}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="border-t border-forest/10 bg-white py-16">
+    <div class="container-page flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="font-heading text-4xl font-semibold tracking-tight text-forest">{p.closingTitle}</h2>
+        <p class="mt-4 leading-7 text-forest/65">{p.closingText}</p>
+      </div>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <a href={localizedPath('/get-involved', locale)} class="btn btn-primary h-12">{p.closingConnect}</a>
+        <a href={localizedPath('/give', locale)} class="btn btn-outline h-12">{p.closingGive}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

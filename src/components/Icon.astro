@@ -27,7 +27,8 @@ export type IconName =
   | 'close'
   | 'message-heart'
   | 'building'
-  | 'network';
+  | 'network'
+  | 'play';
 
 interface Props {
   name: IconName;
@@ -218,5 +219,8 @@ const { name, class: className = 'size-5', ...rest } = Astro.props;
       <circle cx="19" cy="18" r="2.2" />
       <path d="M10.4 6.7 6.7 15.9M13.6 6.7l3.7 9.2M7.3 18h9.4" />
     </>
+  )}
+  {name === 'play' && (
+    <path d="M8 5.8v12.4a.8.8 0 0 0 1.2.7l9.9-6.2a.8.8 0 0 0 0-1.4L9.2 5.1A.8.8 0 0 0 8 5.8Z" fill="currentColor" />
   )}
 </svg>

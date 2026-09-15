@@ -1,0 +1,40 @@
+---
+import TestimonyVideo from '@/components/TestimonyVideo.astro';
+import { testimonies } from '@/data/testimonies';
+import { ui } from '@/i18n/ui';
+import type { Locale } from '@/i18n/locales';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const h = ui[locale].home;
+---
+
+{
+  testimonies.length > 0 && (
+    <section class="bg-white py-20" aria-labelledby="testimonies-title">
+      <div class="container-page grid gap-10 lg:grid-cols-[.75fr_1.25fr] lg:items-center">
+        <div class="max-w-xl">
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-clay">{h.testimoniesEyebrow}</p>
+          <h2 id="testimonies-title" class="mt-4 font-heading text-4xl font-semibold tracking-tight text-forest sm:text-5xl">
+            {h.testimoniesTitle}
+          </h2>
+          <p class="mt-5 leading-7 text-forest/65">{h.testimoniesIntro}</p>
+        </div>
+        {/* Mobile: swipeable row. md+: grid that absorbs additional testimonies without layout changes. */}
+        <ul
+          role="list"
+          class="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] md:gap-5 md:overflow-visible md:px-0 md:pb-0"
+        >
+          {testimonies.map((testimony, index) => (
+            <li class="w-[68%] shrink-0 snap-start sm:w-[42%] md:w-auto">
+              <TestimonyVideo testimony={testimony} index={index} total={testimonies.length} locale={locale} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}

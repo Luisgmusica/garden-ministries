@@ -1,7 +1,10 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
 import Icon from '@/components/Icon.astro';
+import founders from '@/assets/about/founders.jpg';
+import foundersFamily from '@/assets/about/founders-family.jpg';
 import { ui } from '@/i18n/ui';
 import type { Locale } from '@/i18n/locales';
 
@@ -32,12 +35,35 @@ const icons = ['church', 'heart-handshake', 'network', 'sprout'] as const;
           </article>
         ))}
       </div>
-      <div class="mt-12 grid gap-6 border-t border-forest/10 pt-10 lg:grid-cols-[.7fr_1.3fr]">
-        <h2 class="font-heading text-4xl font-semibold text-forest">{a.historyTitle}</h2>
-        <div>
-          <p class="leading-8 text-forest/65">{a.history}</p>
-          <p class="mt-6 text-xs font-bold uppercase tracking-[0.16em] text-clay">{a.legal}</p>
+      <div class="mt-16 border-t border-forest/10 pt-12">
+        <div class="grid gap-10 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
+          {/* Founders photo is a photograph of a print: shown at a modest size so it stays sharp enough. */}
+          <figure class="mx-auto w-full max-w-xl lg:mx-0">
+            <Image
+              src={founders}
+              alt={a.foundersAlt}
+              widths={[480, 720, 960, 1152]}
+              sizes="(min-width: 640px) 36rem, 100vw"
+              class="aspect-[4/3] w-full rounded-[2rem] object-cover"
+            />
+            <figcaption class="mt-3 text-sm text-forest/60">{a.foundersCaption}</figcaption>
+          </figure>
+          <div>
+            <h2 class="font-heading text-4xl font-semibold tracking-tight text-forest sm:text-5xl">{a.peopleTitle}</h2>
+            <p class="mt-5 max-w-xl text-lg leading-8 text-forest/70">{a.peopleText}</p>
+            <p class="mt-8 text-xs font-bold uppercase tracking-[0.16em] text-clay">{a.legal}</p>
+          </div>
         </div>
+        <figure class="mt-12">
+          <Image
+            src={foundersFamily}
+            alt={a.familyAlt}
+            widths={[640, 960, 1280, 1944]}
+            sizes="(min-width: 84rem) 80rem, 100vw"
+            class="aspect-[3/2] w-full rounded-[2rem] object-cover"
+          />
+          <figcaption class="mt-3 text-sm text-forest/60">{a.familyCaption}</figcaption>
+        </figure>
       </div>
     </div>
   </section>
