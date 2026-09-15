@@ -2,10 +2,15 @@ export const locales = ['en', 'es'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'en';
 
-/** Given an unprefixed English path like "/about", return the localized path. */
+/**
+ * Given an unprefixed English path like "/about" (optionally with "#fragment"), return the localized
+ * path with a trailing slash ("/about/", "/es/about/"), matching `trailingSlash: 'always'`.
+ */
 export function localizedPath(path: string, locale: Locale): string {
-  const clean = path === '/' ? '' : path;
-  return locale === defaultLocale ? `/${clean}`.replace(/\/+/g, '/') : `/es${clean}`;
+  const [pathname, fragment] = path.split('#');
+  const clean = pathname.replace(/\/+$/, '');
+  const localized = locale === defaultLocale ? `${clean}/` : `/es${clean}/`;
+  return fragment ? `${localized}#${fragment}` : localized;
 }
 
 /** Strip the /es prefix (if any) to get the canonical English path used for the other locale link. */

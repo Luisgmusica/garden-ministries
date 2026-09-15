@@ -17,10 +17,10 @@ interface Props {
 const { locale, path, title, description, ogImage = '/og.jpg' } = Astro.props;
 const t = ui[locale];
 
-const cleanPath = path === '/' ? '' : path;
-const enUrl = new URL(cleanPath || '/', Astro.site);
-const esUrl = new URL(`/es${cleanPath}` || '/es', Astro.site);
-const canonicalUrl = new URL(locale === 'en' ? cleanPath || '/' : `/es${cleanPath}`, Astro.site);
+const cleanPath = path.replace(/\/+$/, '');
+const enUrl = new URL(`${cleanPath}/`, Astro.site);
+const esUrl = new URL(`/es${cleanPath}/`, Astro.site);
+const canonicalUrl = locale === 'en' ? enUrl : esUrl;
 const ogImageUrl = new URL(ogImage, Astro.site);
 
 const pageTitle = t.meta.titleTemplate.replace('%s', title);
