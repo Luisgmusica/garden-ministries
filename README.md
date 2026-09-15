@@ -45,9 +45,9 @@ To add a page: create a template in `src/templates/`, then two one-line wrapper 
 
 ## Before launch — things intentionally left as TODOs
 
-1. **`astro.config.mjs` → `SITE_URL`** is a placeholder
-   (`https://www.gardenministries.org`). Canonical URLs, hreflang tags, and the sitemap all derive
-   from this — update it to the real domain before deploying.
+1. **`astro.config.mjs` → `SITE_URL`** is the official production domain
+   (`https://garden-ministries.org`, apex — no www). Canonical URLs, hreflang tags, and the
+   sitemap all derive from this value.
 2. **Give page** is a working *preview* of the donation flow (frequency, amount, designation,
    summary) with no payment processor wired up yet — matches the honesty of the original prototype
    rather than claiming to process real donations.

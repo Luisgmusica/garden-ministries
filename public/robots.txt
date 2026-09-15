@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.gardenministries.org/sitemap-index.xml
+Sitemap: https://garden-ministries.org/sitemap-index.xml

@@ -1,0 +1,112 @@
+---
+/**
+ * Official Zeffy v2 donation embed.
+ *
+ * Astro notes:
+ * - The loader is an Astro *processed* `<script>`: Astro hoists and bundles it, so it is
+ *   emitted once per page even if this component renders more than once, and it is served
+ *   from our own origin instead of an inline handler (works under a strict CSP).
+ * - The official snippet's inline `onerror` fallback is reproduced with `addEventListener`,
+ *   so the markup contract Zeffy's script depends on (`data-zeffy-embed`, `data-form-url`,
+ *   `data-zeffy-embed-fallback`, `data-zeffy-embed-src`) is left untouched.
+ * - Zeffy's script removes the fallback block itself once it loads, and applies its own
+ *   inline sizing to the embed container (width 100%, max-width 600px, auto height via
+ *   postMessage), so no CSS here fights it.
+ */
+interface Props {
+  /** Zeffy embed path, e.g. "/embed/donation-form/<form-slug>". */
+  formUrl?: string;
+  /** Accessible title for the embedded form. */
+  title?: string;
+  /** Height in px reserved while the form loads; Zeffy auto-resizes afterwards. */
+  minHeight?: string;
+}
+
+const {
+  formUrl = '/embed/donation-form/give-act-see-the-impact',
+  title = 'Donation form powered by Zeffy',
+  minHeight = '600',
+} = Astro.props;
+
+const fallbackSrc = new URL(formUrl, 'https://www.zeffy.com').toString();
+
+// `allowpaymentrequest` and `allowTransparency` are legacy/deprecated attributes missing from
+// Astro's iframe typings, but both are part of Zeffy's official snippet (and Zeffy's own script
+// sets them on the iframe it injects), so they are passed through verbatim.
+const legacyIframeAttrs: Record<string, string> = {
+  allowpaymentrequest: 'true',
+  allowTransparency: 'true',
+};
+---
+
+<div class="zeffy-embed">
+  <div data-zeffy-embed data-form-url={formUrl} data-min-height={minHeight}></div>
+
+  <div data-zeffy-embed-fallback style="display:none;">
+    <div class="zeffy-embed__fallback">
+      <iframe
+        title={title}
+        style="position:absolute;border:0;top:0;left:0;bottom:0;right:0;width:100%;height:100%"
+        data-zeffy-embed-src={fallbackSrc}
+        {...legacyIframeAttrs}></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ZEFFY_SRC = 'https://www.zeffy.com/embed/v2/zeffy-embed.js';
+
+  /** Mirrors the `onerror` handler of Zeffy's official snippet. */
+  function showFallback() {
+    document.querySelectorAll<HTMLElement>('[data-zeffy-embed-fallback]').forEach((block) => {
+      block.style.display = 'block';
+      block.querySelectorAll<HTMLIFrameElement>('iframe[data-zeffy-embed-src]').forEach((frame) => {
+        frame.src = frame.getAttribute('data-zeffy-embed-src') ?? '';
+      });
+    });
+  }
+
+  if (
+    document.querySelector('[data-zeffy-embed]') &&
+    !document.querySelector(`script[src="${ZEFFY_SRC}"]`)
+  ) {
+    const loader = document.createElement('script');
+    loader.src = ZEFFY_SRC;
+    loader.async = true;
+    loader.addEventListener('error', showFallback);
+    document.head.appendChild(loader);
+  }
+</script>
+
+<style>
+  .zeffy-embed {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Zeffy applies its own inline `outline: 1px solid #e0e0e0` to the embed container. Only the
+     colour is overridden (not `outline-style`), so Zeffy keeps control of when the frame shows
+     and the card sits on the site's border tone instead of a neutral grey. */
+  .zeffy-embed [data-zeffy-embed] {
+    outline-color: color-mix(in srgb, var(--color-forest) 12%, transparent) !important;
+  }
+
+  /* Only rendered when the Zeffy loader script itself fails to load. Sized to match the
+     dimensions Zeffy applies to the real embed so the page looks the same either way. */
+  .zeffy-embed__fallback {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 600px;
+    height: 1100px;
+    margin-inline: auto;
+    border-radius: 16px;
+    background: #fff;
+  }
+
+  @media (min-width: 40rem) {
+    .zeffy-embed__fallback {
+      height: 940px;
+    }
+  }
+</style>

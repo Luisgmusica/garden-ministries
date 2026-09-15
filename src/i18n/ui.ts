@@ -30,7 +30,7 @@ export const ui = {
       location: 'Idaho, USA',
       contact: 'Contact Garden',
       copyright: '© 2026 Garden Ministries Inc.',
-      note: 'Website preview · Donation processing not yet connected',
+      note: 'Secure giving · EIN 20-5133327',
     },
     home: {
       eyebrow: 'Garden Ministries · Idaho',
@@ -80,7 +80,7 @@ export const ui = {
       ctaTitle: 'Plant hope where it can grow.',
       ctaText:
         "Support Garden's general mission today, or explore the initiatives that will become available as they are reviewed and approved.",
-      ctaGive: 'Preview giving',
+      ctaGive: 'Give now',
       ctaJoin: 'Get involved',
     },
     about: {
@@ -116,7 +116,7 @@ export const ui = {
       response: "Garden's response",
       evidence: 'How impact is documented',
       note: 'This is a launch-category page. Public financial goals and specific stories will be added only after leadership approval and privacy review.',
-      give: 'Preview giving to this Mission',
+      give: 'Support this mission',
       contact: 'Ask about this Mission',
     },
     impact: {
@@ -143,22 +143,12 @@ export const ui = {
     },
     give: {
       eyebrow: 'Give',
-      title: 'Make generosity easy to understand and meaningful to follow.',
+      title: 'Give. Act. See the Impact.',
       description:
-        "This preview demonstrates Garden's future giving experience. Secure payment processing and tax acknowledgments will be activated after the organization's payment account and receipt language are verified.",
-      frequency: 'Frequency',
-      one: 'One time',
-      monthly: 'Monthly',
-      amount: 'Gift amount',
-      designation: 'Direct this gift',
-      general: 'Garden General Mission',
-      generalText: 'Use where the need and opportunity are greatest.',
-      continue: 'Preview secure checkout',
-      result:
-        "The giving flow is ready. Connect Garden's verified payment account to open secure checkout, record the designation, and send the appropriate acknowledgment.",
-      secure: "Card details will be handled by the selected secure payment provider—not stored on this website.",
-      summary: 'Your selection',
-      amounts: ['25', '50', '100', '250'],
+        'Your generosity helps Garden Ministries support ministries, people, and initiatives that are making a real impact.',
+      formTitle: 'Secure donation form',
+      secure:
+        'Donations are processed securely by Zeffy. Card details are never stored on this website.',
     },
     getInvolved: {
       eyebrow: 'Get involved',
@@ -225,7 +215,7 @@ export const ui = {
       location: 'Idaho, EE. UU.',
       contact: 'Contactar a Garden',
       copyright: '© 2026 Garden Ministries Inc.',
-      note: 'Vista preliminar · El procesamiento de donaciones aún no está conectado',
+      note: 'Donaciones seguras · EIN 20-5133327',
     },
     home: {
       eyebrow: 'Garden Ministries · Idaho',
@@ -275,7 +265,7 @@ export const ui = {
       ctaTitle: 'Planta esperanza donde pueda crecer.',
       ctaText:
         'Apoya la misión general de Garden o explora las iniciativas que estarán disponibles cuando sean revisadas y aprobadas.',
-      ctaGive: 'Ver experiencia de donación',
+      ctaGive: 'Donar ahora',
       ctaJoin: 'Participar',
     },
     about: {
@@ -311,7 +301,7 @@ export const ui = {
       response: 'Respuesta de Garden',
       evidence: 'Cómo se documenta el impacto',
       note: 'Esta es una categoría inicial. Metas financieras e historias específicas se añadirán únicamente después de aprobación y revisión de privacidad.',
-      give: 'Ver donación para esta Mission',
+      give: 'Apoyar esta misión',
       contact: 'Preguntar sobre esta Mission',
     },
     impact: {
@@ -338,22 +328,12 @@ export const ui = {
     },
     give: {
       eyebrow: 'Donar',
-      title: 'Hacer que la generosidad sea fácil de entender y significativa de seguir.',
+      title: 'Dar. Actuar. Ver el impacto.',
       description:
-        'Esta vista demuestra la futura experiencia de donación. Los pagos seguros y recibos se activarán después de verificar la cuenta y el lenguaje correspondiente.',
-      frequency: 'Frecuencia',
-      one: 'Una vez',
-      monthly: 'Mensual',
-      amount: 'Cantidad',
-      designation: 'Dirigir esta donación',
-      general: 'Misión general de Garden',
-      generalText: 'Utilizar donde exista mayor necesidad y oportunidad.',
-      continue: 'Ver checkout seguro',
-      result:
-        'La experiencia está preparada. Al conectar la cuenta verificada de Garden se abrirá el pago seguro, se registrará la designación y se enviará el recibo apropiado.',
-      secure: 'Los datos de tarjeta serán manejados por el proveedor seguro seleccionado y no se almacenarán en este sitio.',
-      summary: 'Tu selección',
-      amounts: ['25', '50', '100', '250'],
+        'Tu generosidad ayuda a Garden Ministries a apoyar ministerios, personas e iniciativas que generan un impacto real.',
+      formTitle: 'Formulario de donación seguro',
+      secure:
+        'Las donaciones se procesan de forma segura a través de Zeffy. Los datos de tu tarjeta nunca se almacenan en este sitio.',
     },
     getInvolved: {
       eyebrow: 'Participa',

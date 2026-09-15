@@ -91,7 +91,7 @@ const blocks = [
       <div class="mt-10 rounded-[1.8rem] bg-forest p-7 text-cream sm:flex sm:items-center sm:justify-between sm:gap-8">
         <p class="max-w-2xl text-sm leading-7 text-cream/68">{d.note}</p>
         <div class="mt-6 flex shrink-0 flex-col gap-3 sm:mt-0">
-          <a href={`${localizedPath('/give', locale)}?mission=${mission.slug}`} class="btn btn-cream h-11">
+          <a href={localizedPath('/give', locale)} class="btn btn-cream h-11">
             {d.give}
             <Icon name="arrow-right" class="size-4" />
           </a>

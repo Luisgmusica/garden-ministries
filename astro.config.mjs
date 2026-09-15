@@ -3,9 +3,9 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
-// TODO: replace with the real production domain before launch.
+// Official production domain (apex, no www). www redirects here at the Nginx level.
 // site + sitemap + canonical + hreflang tags all depend on this value.
-const SITE_URL = 'https://www.gardenministries.org';
+const SITE_URL = 'https://garden-ministries.org';
 
 export default defineConfig({
   site: SITE_URL,
