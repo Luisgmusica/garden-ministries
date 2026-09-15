@@ -75,7 +75,8 @@ owner's longer heading (`Fortalecer a quienes sirven en el ministerio`).
    `public/videos/testimonies/` and set `captions` in `testimonies.ts`. Optional owner-provided `name`, `summary`, `missionSlug`.
 4. **Fourth testimony (`ce85921e`):** when a clean original exists — encode with `scripts/media/encode-video.swift`
    (`… 960 900` for a landscape source), take a poster frame, add an entry to `testimonies.ts`. No component change.
-5. **Founders:** optional original digital file of `IMG_8207`; names/roles only if the owner provides them.
+5. **Founders:** owner provided a clearer photo (`IMG_8418.png`); swapped into `src/assets/about/founders.jpg` in `main`
+   (not yet deployed). Names/roles only if the owner provides them.
 6. **Prayer content upkeep:** edit `src/data/prayer.ts` (and `prayerUpdated`) when Garden shares new work to pray for.
 7. Not in this round: www redirect, Cache-Control, custom 404 in Nginx, `/missions/` heading order, re-encoding
    `community-water-well.mp4`, contact form replacement (see `CURRENT-STATE.md` known issues, `CONTACT-INFO-PROPOSAL.md`).

@@ -80,7 +80,8 @@ submission buttons, database, notifications or user-generated content. Individua
 ## About
 
 "The people behind Garden" replaces the former "History with room to grow" section: `src/assets/about/founders.jpg`
-(from `IMG_8207.jpeg`, a photo of a print, shown ≤ 36 rem wide) with caption "The founders of Garden Ministries", short text
+(from owner-provided `IMG_8418.png`, 1280×960, a clearer digital copy of the same portrait; it replaced the earlier
+photo-of-a-print `IMG_8207.jpeg` in `main` on 2026-09-15; shown ≤ 36 rem wide) with caption "The founders of Garden Ministries", short text
 (formed in Idaho in 2006 by its founders; relationships of trust), legal line, and `founders-family.jpg` (from `IMG_2511.jpeg`)
 full width, caption "The founders with their family". No names, titles or roles. Replacing a photo = replacing the asset file.
 
@@ -150,7 +151,7 @@ Isrrael's phone, personal email, title or name from the Connect graphic are **no
 2. **GitHub push blocked** (see Source ↔ production).
 3. **Testimonies have no captions/transcripts** (WCAG 1.2.2 gap) — need owner-provided transcripts or human transcription.
 4. `ce85921e` testimony pending a clean original (watermark).
-5. Founders photo is a photograph of a print; replace `src/assets/about/founders.jpg` if an original appears.
+5. Founders photo: the clearer owner-provided `IMG_8418` is in `main`; production shows the earlier photo of a print until the next deploy.
 6. **www is not redirected** to the apex (one Nginx server block). Fix needs root (separate change).
 7. **No `Cache-Control`/`Expires`** (ETag/Last-Modified work). Safe later (root, `nginx -t`, reload, separately authorized):
    `/_astro/` `public, max-age=31536000, immutable`; `/videos/` long max-age is safe for `-vN` versioned files

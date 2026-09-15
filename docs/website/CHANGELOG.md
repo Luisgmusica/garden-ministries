@@ -3,6 +3,12 @@
 Newest first. Times UTC. Reconstructed entries before 2026-09-15 cite their evidence; nothing here is inferred without it.
 Mail/server operations: parent project `docs/operations/CHANGELOG.md` (not in this repo).
 
+## 2026-09-15 — founders photo replaced (in `main`, not deployed)
+
+- Owner request: use `Fotos/Owners and family /IMG_8418.png` (1280×960, same portrait, sharper, no print glare) instead of
+  `IMG_8207.jpeg`. Converted to JPEG (quality 95) as `src/assets/about/founders.jpg`; original file unchanged (SHA-256 checked).
+  No layout or copy change; alt text and caption unchanged.
+
 ## 2026-09-15 — content round 1 (in `main`, NOT deployed)
 
 - **Owner decisions:** Venezuela earthquake prayer under Community Water & Relief (Local Family Care stays Idaho-focused);
