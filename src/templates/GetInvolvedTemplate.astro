@@ -4,7 +4,7 @@ import PageHero from '@/components/PageHero.astro';
 import Icon from '@/components/Icon.astro';
 import { ui } from '@/i18n/ui';
 import { localizedPath, type Locale } from '@/i18n/locales';
-import { mailingAddress } from '@/data/organization';
+import { contactEmail, mailingAddress, turnstileSiteKey } from '@/data/organization';
 
 interface Props {
   locale: Locale;
@@ -14,6 +14,9 @@ const { locale } = Astro.props;
 const t = ui[locale];
 const g = t.getInvolved;
 const icons = ['message-heart', 'hand-heart', 'church', 'building'] as const;
+// Without a public Turnstile sitekey the form cannot be verified server-side, so the page offers email instead.
+const formEnabled = turnstileSiteKey !== '';
+const inputClass = 'h-11 rounded-lg border border-cream/20 bg-white/8 px-3 text-cream placeholder:text-cream/35 aria-[invalid=true]:border-[#e6a98d]';
 ---
 
 <BaseLayout locale={locale} path="/get-involved" title={g.eyebrow} description={g.description}>
@@ -47,26 +50,81 @@ const icons = ['message-heart', 'hand-heart', 'church', 'building'] as const;
         <h2 class="font-heading text-3xl font-semibold">{g.formTitle}</h2>
         <p class="mt-3 text-sm leading-7 text-cream/60">{g.formText}</p>
 
-        <div id="contact-sent" class="mt-8 hidden items-start gap-3 rounded-2xl bg-white/8 p-5">
+        <div id="contact-success" class="mt-8 hidden items-start gap-3 rounded-2xl bg-white/8 p-5" tabindex="-1">
           <Icon name="check-circle" class="mt-0.5 size-5 shrink-0 text-[#e6a98d]" />
-          <p class="text-sm leading-7">{g.sent}</p>
+          <div>
+            <p class="font-semibold">{g.successTitle}</p>
+            <p class="mt-1 text-sm leading-7 text-cream/75">{g.successText}</p>
+          </div>
         </div>
+        <p id="contact-status" class="sr-only" role="status" aria-live="polite"></p>
 
-        <form id="contact-form" class="mt-8 grid gap-4">
-          <label class="grid gap-2 text-sm">
-            <span>{g.name}</span>
-            <input required name="name" type="text" class="h-11 rounded-lg border border-cream/20 bg-white/8 px-3 text-cream placeholder:text-cream/35" />
-          </label>
-          <label class="grid gap-2 text-sm">
-            <span>{g.email}</span>
-            <input required name="email" type="email" class="h-11 rounded-lg border border-cream/20 bg-white/8 px-3 text-cream placeholder:text-cream/35" />
-          </label>
-          <label class="grid gap-2 text-sm">
-            <span>{g.message}</span>
-            <textarea required name="message" class="min-h-28 rounded-lg border border-cream/20 bg-white/8 px-3 py-2 text-cream placeholder:text-cream/35"></textarea>
-          </label>
-          <button type="submit" class="btn btn-cream mt-2 h-12">{g.send}</button>
-        </form>
+        {
+          formEnabled ? (
+            <>
+              <noscript>
+                <p class="mt-8 rounded-2xl bg-white/8 p-5 text-sm leading-7">
+                  {g.noscript}{' '}
+                  <a class="font-semibold underline underline-offset-4 hover:text-white" href={`mailto:${contactEmail}`}>
+                    {contactEmail}
+                  </a>
+                </p>
+              </noscript>
+              {/* Hidden until the script runs: without JavaScript nothing can be submitted, so nothing can leak into a URL. */}
+              <div id="contact-form-wrap" hidden>
+                <form
+                  id="contact-form"
+                  class="mt-8 grid gap-4"
+                  method="post"
+                  action="/api/contact"
+                  novalidate
+                  data-sitekey={turnstileSiteKey}
+                  data-locale={locale}
+                  data-email={contactEmail}
+                  data-messages={JSON.stringify(g.errors)}
+                >
+                  <div class="grid gap-2 text-sm">
+                    <label for="contact-name">{g.name}</label>
+                    <input id="contact-name" name="name" type="text" required maxlength="100" autocomplete="name" aria-describedby="contact-name-error" class={inputClass} />
+                    <p id="contact-name-error" class="hidden text-sm leading-6 text-[#f0c0ae]"></p>
+                  </div>
+                  <div class="grid gap-2 text-sm">
+                    <label for="contact-email">{g.email}</label>
+                    <input id="contact-email" name="email" type="email" required maxlength="254" autocomplete="email" inputmode="email" spellcheck="false" aria-describedby="contact-email-error" class={inputClass} />
+                    <p id="contact-email-error" class="hidden text-sm leading-6 text-[#f0c0ae]"></p>
+                  </div>
+                  <div class="grid gap-2 text-sm">
+                    <label for="contact-message">{g.message}</label>
+                    <textarea id="contact-message" name="message" required minlength="10" maxlength="5000" aria-describedby="contact-message-error" class={`${inputClass} h-auto min-h-28 py-2`}></textarea>
+                    <p id="contact-message-error" class="hidden text-sm leading-6 text-[#f0c0ae]"></p>
+                  </div>
+                  <div class="contact-hp" aria-hidden="true">
+                    <label for="contact-website">{g.honeypot}</label>
+                    <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+                  </div>
+                  <div id="contact-turnstile" class="min-h-[65px]"></div>
+                  <div id="contact-error" class="hidden rounded-xl bg-white/8 px-4 py-3 text-sm leading-6" role="alert"></div>
+                  <button type="submit" id="contact-submit" class="btn btn-cream mt-2 h-12 disabled:cursor-wait disabled:opacity-75">
+                    {g.send}
+                  </button>
+                  <p class="text-xs leading-6 text-cream/55">
+                    {g.privacyNotice}{' '}
+                    <a href={localizedPath('/privacy', locale)} class="underline underline-offset-4 hover:text-cream">
+                      {g.privacyLink}
+                    </a>
+                  </p>
+                </form>
+              </div>
+            </>
+          ) : (
+            <p class="mt-8 rounded-2xl bg-white/8 p-5 text-sm leading-7">
+              {g.unavailable}{' '}
+              <a class="font-semibold underline underline-offset-4 hover:text-white" href={`mailto:${contactEmail}`}>
+                {contactEmail}
+              </a>
+            </p>
+          )
+        }
 
         <div class="mt-9 border-t border-cream/12 pt-7">
           <h3 class="font-sans text-xs font-bold uppercase tracking-[0.18em] text-cream/55">{t.mailingAddress.label}</h3>
@@ -80,13 +138,213 @@ const icons = ['message-heart', 'hand-heart', 'church', 'building'] as const;
   </section>
 </BaseLayout>
 
+<style>
+  /* Honeypot: off-screen (not display:none, which some bots skip); aria-hidden and tabindex=-1 keep people out of it. */
+  .contact-hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>
+
 <script>
+  type Field = 'name' | 'email' | 'message';
+  type TurnstileApi = {
+    render: (container: HTMLElement, options: Record<string, unknown>) => string;
+    reset: (widgetId?: string) => void;
+    getResponse: (widgetId?: string) => string | undefined;
+  };
+  type ContactWindow = Window & { turnstile?: TurnstileApi; gardenContactTurnstileReady?: () => void };
+
+  const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=gardenContactTurnstileReady';
+  const FIELDS: Field[] = ['name', 'email', 'message'];
+  const EMAIL = /^[^\s@<>(),;:"]+@[^\s@<>(),;:"]+\.[^\s@<>(),;:"]{2,}$/;
+  const LINK = /\b(?:https?:\/\/|www\.)/gi;
+
+  const wrap = document.getElementById('contact-form-wrap');
   const form = document.getElementById('contact-form');
-  const sent = document.getElementById('contact-sent');
-  form?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    form.classList.add('hidden');
-    sent?.classList.remove('hidden');
-    sent?.classList.add('flex');
-  });
+  if (wrap && form instanceof HTMLFormElement) setUpContactForm(wrap, form);
+
+  function setUpContactForm(wrap: HTMLElement, form: HTMLFormElement) {
+    const messages = JSON.parse(form.dataset.messages ?? '{}') as Record<string, string>;
+    const contactEmail = form.dataset.email ?? '';
+    const win = window as ContactWindow;
+    const errorBox = document.getElementById('contact-error') as HTMLElement;
+    const status = document.getElementById('contact-status') as HTMLElement;
+    const success = document.getElementById('contact-success') as HTMLElement;
+    const submit = document.getElementById('contact-submit') as HTMLButtonElement;
+    const turnstileBox = document.getElementById('contact-turnstile') as HTMLElement;
+    const submitLabel = submit.textContent?.trim() ?? '';
+    let widgetId: string | undefined;
+    let token = '';
+    let busy = false;
+
+    wrap.hidden = false;
+
+    const field = (name: Field) => document.getElementById(`contact-${name}`) as HTMLInputElement | HTMLTextAreaElement;
+    const fieldError = (name: Field) => document.getElementById(`contact-${name}-error`) as HTMLElement;
+
+    function showError(text: string, withEmail = false) {
+      errorBox.replaceChildren(document.createTextNode(text));
+      if (withEmail && contactEmail) {
+        const link = document.createElement('a');
+        link.href = `mailto:${contactEmail}`;
+        link.textContent = contactEmail;
+        link.className = 'font-semibold underline underline-offset-4';
+        errorBox.append(' ', link);
+      }
+      errorBox.classList.remove('hidden');
+    }
+
+    function clearErrors() {
+      errorBox.classList.add('hidden');
+      errorBox.replaceChildren();
+      for (const name of FIELDS) {
+        field(name).removeAttribute('aria-invalid');
+        fieldError(name).classList.add('hidden');
+        fieldError(name).textContent = '';
+      }
+    }
+
+    function markInvalid(errors: Partial<Record<Field, string>>) {
+      const invalid = FIELDS.filter((name) => errors[name]);
+      for (const name of invalid) {
+        field(name).setAttribute('aria-invalid', 'true');
+        fieldError(name).textContent = errors[name] ?? '';
+        fieldError(name).classList.remove('hidden');
+      }
+      showError(messages.fixFields);
+      field(invalid[0]).focus();
+    }
+
+    function validate(values: Record<Field, string>) {
+      const errors: Partial<Record<Field, string>> = {};
+      const length = (value: string) => [...value].length;
+      if (length(values.name) < 1) errors.name = messages.nameRequired;
+      else if (length(values.name) > 100) errors.name = messages.nameTooLong;
+      if (values.email.length > 254 || !EMAIL.test(values.email)) errors.email = messages.emailInvalid;
+      if (length(values.message) < 10) errors.message = messages.messageShort;
+      else if (length(values.message) > 5000) errors.message = messages.messageLong;
+      else if ((values.message.match(LINK)?.length ?? 0) > 3) errors.message = messages.messageLinks;
+      return errors;
+    }
+
+    function resetTurnstile() {
+      token = '';
+      if (win.turnstile && widgetId !== undefined) win.turnstile.reset(widgetId);
+    }
+
+    function setBusy(value: boolean) {
+      busy = value;
+      submit.disabled = value;
+      submit.textContent = value ? messages.sending : submitLabel;
+      form.setAttribute('aria-busy', String(value));
+    }
+
+    win.gardenContactTurnstileReady = () => {
+      if (!win.turnstile) return;
+      widgetId = win.turnstile.render(turnstileBox, {
+        sitekey: form.dataset.sitekey,
+        action: 'contact',
+        language: form.dataset.locale,
+        theme: 'dark',
+        size: 'flexible',
+        callback: (value: string) => {
+          token = value;
+        },
+        'expired-callback': () => {
+          token = '';
+        },
+        'error-callback': () => {
+          token = '';
+          showError(messages.verifyUnavailable, true);
+        },
+      });
+    };
+
+    const script = document.createElement('script');
+    script.src = TURNSTILE_SRC;
+    script.async = true;
+    script.defer = true;
+    script.addEventListener('error', () => showError(messages.verifyUnavailable, true));
+    document.head.append(script);
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (busy) return;
+      clearErrors();
+
+      const values = {
+        name: field('name').value.trim(),
+        email: field('email').value.trim(),
+        message: field('message').value.trim(),
+      };
+      const errors = validate(values);
+      if (Object.keys(errors).length) {
+        markInvalid(errors);
+        return;
+      }
+
+      const turnstileToken = token || (widgetId !== undefined ? win.turnstile?.getResponse(widgetId) ?? '' : '');
+      if (!turnstileToken) {
+        showError(messages.verify);
+        return;
+      }
+      const honeypot = form.elements.namedItem('website');
+
+      setBusy(true);
+      status.textContent = messages.sending;
+      let sent = false;
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            ...values,
+            locale: form.dataset.locale,
+            website: honeypot instanceof HTMLInputElement ? honeypot.value : '',
+            turnstileToken,
+          }),
+          signal: AbortSignal.timeout(20_000),
+        });
+        const result = (await response.json().catch(() => ({}))) as { ok?: boolean; error?: string; fields?: unknown };
+
+        if (response.ok && result.ok === true) {
+          // Success is shown only after the server accepted the message for delivery.
+          sent = true;
+          wrap.hidden = true;
+          success.classList.remove('hidden');
+          success.classList.add('flex');
+          status.textContent = messages.successAnnounce;
+          success.focus();
+          return;
+        }
+
+        status.textContent = '';
+        const serverFields = Array.isArray(result.fields) ? result.fields.filter((name): name is Field => FIELDS.includes(name)) : [];
+        if (response.status === 400 && serverFields.length) {
+          const fallback: Record<Field, string> = { name: messages.nameInvalid, email: messages.emailInvalid, message: messages.messageInvalid };
+          markInvalid(Object.fromEntries(serverFields.map((name) => [name, fallback[name]])));
+        } else if (result.error === 'verify_failed') {
+          showError(messages.verify);
+        } else if (response.status === 429) {
+          showError(messages.rateLimited);
+        } else {
+          showError(messages.tryLater, true);
+        }
+      } catch {
+        status.textContent = '';
+        showError(messages.tryLater, true);
+      } finally {
+        if (!sent) {
+          // The visitor's text stays in the fields; a Turnstile token is single-use, so get a fresh one.
+          setBusy(false);
+          resetTurnstile();
+        }
+      }
+    });
+  }
 </script>

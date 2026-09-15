@@ -1,0 +1,14 @@
+{
+  "name": "garden-contact",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Garden Ministries contact form endpoint: validates, verifies Turnstile, delivers one fixed-format message to info@",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test \"test/*.test.js\""
+  }
+}

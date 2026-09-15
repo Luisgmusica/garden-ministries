@@ -10,3 +10,14 @@ export const mailingAddress = [
   'PMB #150',
   'Meridian, ID 83642',
 ] as const;
+
+/** Institutional address; also the fallback when the online contact form cannot be used. */
+export const contactEmail = 'info@garden-ministries.org';
+
+/**
+ * Public Cloudflare Turnstile sitekey for the "Start a conversation" form (the secret exists only on the server).
+ * Empty = online sending disabled: the page shows the email fallback instead of a form.
+ * Local testing may override it at build time with PUBLIC_TURNSTILE_SITEKEY.
+ */
+const PRODUCTION_TURNSTILE_SITEKEY = '';
+export const turnstileSiteKey: string = import.meta.env.PUBLIC_TURNSTILE_SITEKEY || PRODUCTION_TURNSTILE_SITEKEY;
