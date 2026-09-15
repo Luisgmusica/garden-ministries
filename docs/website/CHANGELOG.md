@@ -3,6 +3,34 @@
 Newest first. Times UTC. Reconstructed entries before 2026-09-15 cite their evidence; nothing here is inferred without it.
 Mail/server operations: parent project `docs/operations/CHANGELOG.md` (not in this repo).
 
+## 2026-09-15 — content round 1 (in `main`, NOT deployed)
+
+- **Owner decisions:** Venezuela earthquake prayer under Community Water & Relief (Local Family Care stays Idaho-focused);
+  Home testimonies with the three suitable videos, `ce85921e` (watermark) pending; `a.jpg`/`c.jpg` approved for /pray; founders
+  photos approved with neutral captions; Scripture KJV / RVR1960; mailing address exact text and label. **Pray With Us is an
+  informational ministry-content page explaining how supporters can pray for the work Garden Ministries is doing. It is not a
+  prayer-request submission platform and has no prayer-management workflow.**
+- `7495897` Docs versioned with the site (see entry below). `9031916` Pray purpose recorded in the plan before implementation.
+- `cdffe7a` **Trailing-slash canonicalization:** `trailingSlash: 'always'`, `localizedPath()` and BaseLayout emit `/`-terminated
+  URLs. Verified: canonical, hreflang, sitemap and all internal links point at 200 URLs (0 slash-less). Repo-only.
+- `2a4ec50` **Media:** 3 testimony MP4s (15.8 MB total, from 35.3 MB HEVC sources; H.264/SDR/AAC/fast start via
+  `scripts/media/encode-video.swift`), 3 poster frames, founders + family photos, `shared-meal.jpg`. Originals untouched (SHA-256 checked).
+- `5c71ce4` **Features:** `/pray/` + `/es/pray/` (`PrayTemplate`, `prayer.ts`); Pray/Orar in nav and footer; mission pages link
+  to their prayer section; Get Involved "Pray" card links to /pray/; `organization.ts` mailing address on Get Involved (EN/ES) and
+  footer (replaces "Idaho, USA" pin; JSON-LD unchanged); About founders section; Home `TestimoniesSection`/`TestimonyVideo`.
+- **Validation:** `npm run check` 0 errors / 0 warnings (1 pre-existing hint); build 23 pages; clean clone of `5c71ce4` byte-identical
+  to the validated build (82 files); link check 0 slash-less or broken internal links except the pre-existing 404-page self links;
+  static a11y (alt text, one h1, `lang`, unique ids) clean except the pre-existing `/missions/` h1→h3 jump; `/pray/` has 0 forms and
+  0 mailto links. Chrome on a local static server with HTTP range support: desktop 1280 (`/pray/`, `/about/`, `/get-involved/`,
+  Home), 768 (`/pray/`, Home), 390 via iframes (`/pray/`, Home, `/about/`), ~606 (`/es/pray/`, `/es/get-involved/`, mobile nav
+  opened/closed by keyboard); no horizontal overflow. Testimonies: no MP4 request before interaction (server log), mouse click
+  plays with sound, a second testimony pauses the first, keyboard Enter plays and focuses the video. Give: Zeffy embed markup
+  byte-identical to production, loader present, no console errors (the form does not render on 127.0.0.1; live page showed the
+  same embed DOM state). Fixed during validation: Get Involved cards stretching, address label font, closing border width,
+  HTML comments shipped in output, sandbox temp copies of the MP4s. Not done: Lighthouse, real iOS/Android devices, screen reader pass.
+- **Production untouched:** docroot still 52 files, nothing newer than 2026-09-11; Nginx config unchanged; live `/pray/` 404.
+- **Push:** not pushed — `~/.ssh/id_ed25519` is passphrase-protected and not in the agent.
+
 ## 2026-09-15
 
 - **Website docs versioned with the site:** `CURRENT-STATE.md`, `CHANGELOG.md`, `DEPLOY.md`, `CONTENT-EXPANSION-PLAN.md`,

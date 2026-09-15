@@ -10,7 +10,8 @@ History: `docs/website/CHANGELOG.md`. Mail/server operations docs live outside t
 
 - Astro 7 (static output), Tailwind CSS 4, `@astrojs/sitemap`, image optimization via `astro:assets`.
 - Brand system: forest / cream / clay / sage / gold, Georgia headings + Inter body (`src/styles/global.css`).
-- Minimal client JavaScript: mobile menu, hero carousel, Zeffy embed loader, Get Involved placeholder form.
+- Minimal client JavaScript: mobile menu, hero carousel, Zeffy embed loader, Get Involved placeholder form,
+  click-to-play testimony videos.
 
 ## Project structure
 

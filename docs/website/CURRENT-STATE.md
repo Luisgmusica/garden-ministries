@@ -1,15 +1,16 @@
-# Website — current state (verified 2026-09-15)
+# Website — current state (updated 2026-09-15, content round 1)
 
 Canonical memory for the public website. Read before any website work. Evidence (repo, server, live HTTP)
 wins over this file: if they disagree, verify, fix this file, and note it in `CHANGELOG.md`.
-This folder is versioned in the website repo (`garden-ministries-astro/docs/website/`). Mail/server operations live outside the repo in the parent project's `docs/operations/` and are not repeated here.
+This folder is versioned in the website repo (`garden-ministries-astro/docs/website/`). Mail/server operations live outside
+the repo in the parent project's `docs/operations/` and are not repeated here.
 
 | Doc | Purpose |
 |---|---|
 | `CURRENT-STATE.md` (this file) | What is true now, decisions in force, known issues |
 | `CHANGELOG.md` | What changed when (evidence-based, newest first) |
 | `DEPLOY.md` | The only supported deployment procedure + rollback |
-| `CONTENT-EXPANSION-PLAN.md` | Approved-but-not-implemented content round (Pray, address, testimonies, founders) |
+| `CONTENT-EXPANSION-PLAN.md` | Content round 1: decisions, what was implemented, what remains |
 | `CONTACT-INFO-PROPOSAL.md` | Proposal to publish info@ (not applied) |
 
 ## Source ↔ production
@@ -17,108 +18,144 @@ This folder is versioned in the website repo (`garden-ministries-astro/docs/webs
 | | Value |
 |---|---|
 | Repository | `garden-ministries-astro/` (git, branch `main`), remote `git@github.com:Luisgmusica/garden-ministries.git` |
-| Source commit of production | **`76e3181`** "Baseline: website source as deployed to production 2026-09-11" |
-| Production | Nginx on garden-prod-01, docroot `/var/www/garden-ministries` (`garden:garden`, dirs 755 / files 644, 52 files, ~15 MB) |
-| Last deploy | 2026-09-11 ~02:23Z (build mtime 02:22:21Z), rsync from the Mac |
-| Reproducibility | Verified 2026-09-15: clean clone of `76e3181` → `npm ci` → `npm run build` gives a `dist/` byte-identical to all 52 files served in production (each file fetched over HTTPS and compared) |
-| GitHub | `76e3181` is **not pushed** (GitHub SSH from this Mac returned `Permission denied (publickey)`). The server clone `~/apps/garden-ministries` is at `8f77259` (pulled 2026-09-03) and is **not** used for deploys |
+| **Production** | Build of **`76e3181`** (baseline). Nginx on garden-prod-01, docroot `/var/www/garden-ministries` (`garden:garden`, dirs 755 / files 644, 52 files, ~15 MB). Last deploy 2026-09-11 ~02:23Z. Verified unchanged 2026-09-15. |
+| **Repo `main` (not deployed)** | Content round 1 on top of the baseline: `7495897` docs, `cdffe7a` trailing slashes, `9031916` Pray purpose, `2a4ec50` media, `5c71ce4` features, plus the docs commit that updates this file. Release candidate = `main` HEAD. |
+| Reproducibility | `76e3181` clean-clone build = production byte-for-byte (52 files, verified). `5c71ce4` clean-clone build = the validated release build byte-for-byte (82 files, ~32 MB). Docs commits do not change the build. |
+| GitHub | **Nothing since `8f77259` is pushed.** From this Mac, GitHub accepts `~/.ssh/id_ed25519`, but the key is passphrase-protected and not loaded in the SSH agent, so non-interactive pushes fail. Unblock (operator, types the passphrase): `ssh-add --apple-use-keychain ~/.ssh/id_ed25519`. Server clone `~/apps/garden-ministries` (at `8f77259`) is not used for deploys. |
 
-Until 2026-09-15 production had been built from an uncommitted working tree; that gap is closed. Rule: deploy only
-a committed SHA built from a clean clone (`DEPLOY.md`).
+Rule: deploy only a committed SHA built from a clean clone (`DEPLOY.md`).
 
 ## Stack and structure
 
 - Astro `^7.2.10` (pinned by `package-lock.json`), static output, Tailwind 4 (`@tailwindcss/vite`), `@astrojs/sitemap`,
-  images via `astro:assets` (sharp). Build machine: this Mac, Node v24.15.0. (Server has Node v22.23.2; unused for deploys.)
-- `src/pages/*.astro` and `src/pages/es/*.astro` are one-line wrappers that render `src/templates/*Template.astro` with `locale`.
-- Components: `Header`, `Footer`, `PageHero`, `MissionCard`, `Icon` (inline SVG set), `ZeffyDonationForm`.
-- Data: `src/data/missions.ts` (3 missions, bilingual `{en, es}` fields). Copy: `src/i18n/ui.ts` (keyed `en`/`es` per page).
-- `content-source/` is tracked reference material (board memo, notes, source photos). It is **not** built into the site.
+  images via `astro:assets` (sharp). Build machine: this Mac, Node v24.15.0.
+- `src/pages/*.astro` and `src/pages/es/*.astro` are one-line wrappers rendering `src/templates/*Template.astro` with `locale`.
+- Components: `Header`, `Footer`, `PageHero`, `MissionCard`, `Icon` (inline SVG set, incl. `play`), `ZeffyDonationForm`,
+  `TestimoniesSection`, `TestimonyVideo`.
+- Data: `missions.ts` (3 missions), `prayer.ts` (Pray With Us content), `testimonies.ts` (testimony videos),
+  `organization.ts` (mailing address). Copy: `src/i18n/ui.ts` (keyed `en`/`es` per page).
+- `scripts/media/encode-video.swift`: macOS web-video encoder (no npm dependency).
+- `content-source/` is tracked reference material, not built into the site.
 - Brand tokens in `src/styles/global.css`: forest `#17352c`, cream `#f7f2e8`, clay `#a85234`, sage `#dfe7da`, gold `#d2a862`;
   Georgia headings, Inter body.
 
-## Routes (21 pages)
+## Routes (23 pages in `main`; production has 21)
 
-`/`, `/about`, `/missions`, `/missions/local-family-care`, `/missions/community-water`, `/missions/ministry-strengthening`,
-`/impact`, `/give`, `/get-involved`, `/privacy`, `/404` — each mirrored under `/es/…` (except 404).
-Nav: Missions · Impact · About · Get involved + **Give now** button + EN/ES switch.
+`/`, `/about/`, `/missions/`, `/missions/local-family-care/`, `/missions/community-water/`, `/missions/ministry-strengthening/`,
+`/impact/`, `/give/`, `/get-involved/`, **`/pray/`**, `/privacy/`, `/404` — each mirrored under `/es/…` (except 404).
+Nav: Missions · Impact · About · **Pray** · Get involved + **Give now** button + EN/ES switch (ES: Misiones · Impacto · Nosotros · **Orar** · Participa).
+Footer Explore: Missions · Impact · About · Pray · Privacy.
 
-## Localization
+## URLs, localization
 
-- One architecture only: strings in `ui.ts`, bilingual fields in data files, `localizedPath(path, locale)` in `src/i18n/locales.ts`.
-- **Spanish URLs reuse English slugs** (`/es/get-involved`, not `/es/participa`). Language switch, hreflang (BaseLayout) and
-  sitemap all depend on this. Decision reaffirmed 2026-09-15: new Prayer page is `/pray` + `/es/pray` (no `/es/orar`).
-- Spanish copy uses *tú*.
+- **Trailing slashes (decision 2026-09-15, `cdffe7a`):** `trailingSlash: 'always'`. `localizedPath()` returns `/about/`,
+  `/es/about/` (keeps `#fragment`); BaseLayout builds canonical/hreflang with the slash; the sitemap follows. Every generated URL
+  is the 200 URL Nginx serves (`/about/`); slash-less URLs keep 301-ing to it. No Nginx change.
+- One localization architecture: strings in `ui.ts`, bilingual fields in data files, `localizedPath()`.
+  **Spanish URLs reuse English slugs** (`/es/pray/`, not `/es/orar`). Spanish copy uses *tú*.
 
 ## Domain, SEO
 
-- Canonical production domain: **`https://garden-ministries.org`** (apex), from `SITE_URL` in `astro.config.mjs`;
-  canonical, hreflang, sitemap and `public/robots.txt` use it.
-- JSON-LD (`BaseLayout`): `NGO` with `addressRegion: ID`, `addressCountry: US` only. Do not add the mailing address as a
-  physical location.
+- Canonical domain **`https://garden-ministries.org`** (apex) from `SITE_URL`. www is served by the same Nginx block, not redirected.
+- JSON-LD (`BaseLayout`): `NGO`, `addressRegion: ID`, `addressCountry: US` only. The mailing address is **not** in structured data.
 
-## Media
+## Pray With Us (`/pray/`, `/es/pray/`)
 
-- Images: `src/assets/*` → responsive WebP at build (hero carousel: 4 well-project images; mission image).
-- Video: `public/videos/community-water-well.mp4` (served as-is; H.264 360×640, 40 s, 2.4 Mbps, 12.5 MB) on
-  `/missions/community-water`, `<video controls preload="none">`. It is well-construction footage, **not** a testimony.
-  Its `poster` uses the unoptimized JPG URL, and the 4:5 box crops the 9:16 video.
-- No site-wide testimonial/story component exists yet.
+**Pray With Us is an informational ministry-content page explaining how supporters can pray for the work Garden Ministries is
+doing. It is not a prayer-request submission platform and has no prayer-management workflow.** No forms, mailto links,
+submission buttons, database, notifications or user-generated content. Individual prayer points carry no donation CTAs.
+
+- Structure: `PageHero` → intro band ("Updated September 2026", intro, in-page links, `shared-meal` photo) → three sections
+  (anchors = mission slugs: `#local-family-care`, `#community-water`, `#ministry-strengthening`), each: mission icon/tone,
+  heading, what Garden does + how to pray, "Learn about this mission", prayer points as a plain list → quiet closing
+  ("Pray. Connect. Give." / "Ora. Participa. Dona." with Get involved + Give).
+- Content source of truth: `src/data/prayer.ts` (sections and prayer points, `prayerUpdated`) + `ui.ts` `pray`. To update:
+  edit those files when Garden provides new information, then build, check, deploy. No CMS.
+- Local Family Care stays Idaho-focused; the Venezuela earthquake prayer lives under Community Water & Relief (owner decision).
+- Scripture: Isaiah 40:31 once, KJV (EN) / RVR1960 (ES).
+- Links in: primary nav, footer, Get Involved "Pray" card, "Pray for this mission" on each mission page (`/pray/#<slug>`).
+- Images: `src/assets/pray/shared-meal.jpg` (from owner batch `Fotos/info/a.jpg`) in the intro; the Community Water section
+  reuses the existing mission photo (desktop only). `c.jpg` not used (one family photo is enough). Alt text describes only what is visible.
+
+## About
+
+"The people behind Garden" replaces the former "History with room to grow" section: `src/assets/about/founders.jpg`
+(from `IMG_8207.jpeg`, a photo of a print, shown ≤ 36 rem wide) with caption "The founders of Garden Ministries", short text
+(formed in Idaho in 2006 by its founders; relationships of trust), legal line, and `founders-family.jpg` (from `IMG_2511.jpeg`)
+full width, caption "The founders with their family". No names, titles or roles. Replacing a photo = replacing the asset file.
+
+## Testimonies (Home)
+
+- `TestimoniesSection` ("Testimonies / In their own words.") after Missions on `/` and `/es/`; data in `src/data/testimonies.ts`.
+- Poster-first: an optimized poster `<Image>` inside a link to the MP4. JS swaps it for `<video controls playsinline>` on
+  activation and plays; one testimony plays at a time; focus moves to the video. **No video bytes before the visitor acts**
+  (verified with a server request log). Without JS the link opens the MP4. No autoplay on load.
+- Accessible names "Play testimony N of 3 (m:ss)"; no names, quotes, locations or mission links (none provided).
+- Optional fields (owner-provided only): `name`, `summary`, `captions` (WebVTT per language), `missionSlug`.
+- Layout: swipeable row on small screens; auto-fit grid from `md`. A fourth entry needs only data + files, no component change.
+
+| Published (in repo) | Source | Output | Size |
+|---|---|---|---|
+| `testimony-884e95be-v1.mp4` | `884e95be….mov` HEVC 464×832, 5.04 MB | H.264 464×832, ~900 kbps, 31.5 s | 3.97 MB |
+| `testimony-img2294-v1.mp4` | `IMG_2294.MOV` HEVC HLG HDR 1080×1920, 20.69 MB | H.264 SDR 720×1280, ~1.8 Mbps, 18.4 s | 4.48 MB |
+| `testimony-beefae6d-v1.mp4` | `beefae6d….mov` HEVC 464×832, 9.62 MB | H.264 464×832, ~900 kbps, 58.9 s | 7.38 MB |
+| **Pending:** `ce85921e….mov` | landscape, visible InShot watermark | not published until a clean original exists | — |
+
+All: H.264 High, BT.709 SDR, AAC 96 kbps stereo, fast start (`moov` before `mdat`), no upscaling, originals in `Fotos/testimonials/`
+untouched. Posters are frames from the encodes (`src/assets/testimonies/`). Captions/transcripts: none yet.
+
+## Other media
+
+- Hero carousel: 4 well-project images. `public/videos/community-water-well.mp4` (H.264 360×640, 2.4 Mbps, 12.5 MB) on
+  `/missions/community-water/` — well-construction footage, not a testimony.
 
 ## Giving, contact
 
-- `/give` + `/es/give`: live **Zeffy** embed (`ZeffyDonationForm`, form `/embed/donation-form/give-act-see-the-impact`,
-  loader `https://www.zeffy.com/embed/v2/zeffy-embed.js`, iframe fallback). No per-mission designation (`?mission=` removed).
-- `/get-involved`: the contact form is a **placeholder** (sends nothing; says so). See `CONTACT-INFO-PROPOSAL.md`.
-- No email, phone or street/mailing address is published yet.
+- `/give/` + `/es/give/`: live **Zeffy** embed (`ZeffyDonationForm`, form `/embed/donation-form/give-act-see-the-impact`,
+  loader `https://www.zeffy.com/embed/v2/zeffy-embed.js`). Embed markup in `main` is byte-identical to production.
+- **Mailing address** (source `src/data/organization.ts`): Garden Ministries / 179 S Ten Mile Rd. Ste. 120 / PMB #150 /
+  Meridian, ID 83642. Shown in `<address>` with label "Mailing address" / "Dirección postal" and note "For mail only — not a
+  visitor location." / "Solo para correspondencia; no es una oficina abierta al público." on `/get-involved/` (EN/ES, in the
+  contact panel) and in the footer "Connect" column, which no longer shows the "Idaho, USA" map pin.
+- `/get-involved/` contact form is still a disclosed **placeholder** (see `CONTACT-INFO-PROPOSAL.md`). No email or phone published.
 
-## Source material authority (owner decision, 2026-09-15)
+## Source material authority (owner decisions, 2026-09-15)
 
-Hierarchy for content work: current explicit owner instruction → current owner-provided material → this documentation →
-older historical/reference documents. Absence of a fact in an older document is not a contradiction; flag only genuine conflicts.
-Authorization to publish is not authorization to invent names, titles, roles, relationships, locations, quotes or mission links.
+Hierarchy: current explicit owner instruction → current owner-provided material → this documentation → older reference
+documents. Absence of a fact in an older document is not a contradiction. Authorization to publish is not authorization to
+invent names, titles, roles, relationships, locations, quotes or mission links.
 
-| Material (outside the repo, `Fotos/`) | Status |
-|---|---|
-| `Fotos/Owners and family ` (trailing space; `IMG_2511.jpeg` family portrait, `IMG_8207.jpeg` couple) | Real photographs of Garden Ministries' **founders and their family**. **Authorized for public website use**, minors included. Names/roles not provided. |
-| `Fotos/testimonials/` (4 videos) | **Authentic testimonials made exclusively for Garden Ministries, authorized for public website use.** Speaker names, language, transcript and mission association not provided. |
-| `Fotos/info/` (Prayer Requests graphic, Connect card, banner, photos `a.jpg`, `B.jpg`, `c.jpg`, `d.jpg`) | **Owner-provided, verified source material** for the current expansion; authoritative editorial source. Evaluate its photos on their own authorization, not by resemblance to earlier withheld batches. |
-| `Fotos/house churches country v/` | Not part of the 2026-09-15 authorization. The 2026-09-02 board-memo decision (withheld) stands until the owner says otherwise. |
-| `Fotos/Generadas IA/` | AI images, rejected (board memo 2026-09-02). |
+| Material (outside the repo, `Fotos/`) | Status | Used |
+|---|---|---|
+| `Owners and family ` (trailing space) | Founders and family; **authorized for public use**, minors included. No names/roles provided. | About |
+| `testimonials/` (4 videos) | Authentic Garden-exclusive testimonies, **authorized**. No names, language, transcripts or mission links provided. | Home (3); `ce85921e` pending |
+| `info/` (Prayer Requests, Connect card, banner, photos) | **Verified owner-provided source** for this expansion. | /pray (content, `a.jpg`), mailing address |
+| `house churches country v/` | Not in the 2026-09-15 authorization; 2026-09-02 withheld decision stands. | — |
+| `Generadas IA/` | AI images, rejected. | — |
 
-Contact identity: the **mailing address** is authorized. Isrrael's phone, personal email, title or name from the Connect
-graphic are **not** authorized for publication.
-
-## Approved, not yet implemented
-
-See `CONTENT-EXPANSION-PLAN.md`: `/pray` + `/es/pray`; nav order About → Pray → Get involved → Give now; mailing address on
-`/get-involved`, `/es/get-involved` and footer; testimonies; founders/family on About.
+Isrrael's phone, personal email, title or name from the Connect graphic are **not** authorized for publication.
 
 ## Testing expectations
 
 - Every change: `npm run check`, `npm run build`, targeted EN + ES checks of the pages touched.
-- Before any deploy: build from a clean clone of the committed SHA; full regression (all routes EN/ES render, language switch,
-  canonical/hreflang/sitemap consistency, Zeffy on `/give` + `/es/give`, mobile nav, 360/768/1280 px on changed pages,
-  Lighthouse mobile on changed pages, no console errors). Broad regression is for pre-deploy, not for every discovery step.
-- After deploy: manifest match + HTTP checks per `DEPLOY.md`.
+- Before any deploy: clean-clone build of the SHA; full regression (all routes EN/ES, language switch, canonical/hreflang/
+  sitemap, internal links, Zeffy on `/give/` + `/es/give/`, mobile nav, 390/768/1280 px on changed pages, Lighthouse mobile
+  on changed pages, no console errors).
+- After deploy: manifest match + HTTP checks per `DEPLOY.md`, plus a visual check of the Zeffy form (it does not render on
+  `127.0.0.1`, so it can only be seen on the real domain).
 
 ## Known issues
 
-1. **Trailing-slash redirect on every internal URL.** Astro `trailingSlash: 'never'` + default `build.format: 'directory'`
-   emits `about/index.html`; Nginx `try_files $uri $uri/ =404` answers `/about` with **301 → `/about/`**. Canonical, hreflang,
-   sitemap and all internal links are slash-less, so each points at a redirect (`http://…/about` takes 2 hops).
-   **Recommended smallest fix (repo only, no Nginx/root change):** `trailingSlash: 'always'`; `localizedPath` returns
-   trailing-slash paths; BaseLayout builds canonical/hreflang with the slash. Trial build 2026-09-15 (scratch clone, not
-   committed): canonical, hreflang, sitemap `<loc>` and every internal link end in `/` and match what Nginx serves with 200;
-   old slash-less URLs keep 301-ing to them. Apply as the first commit of the content round so `/pray/` is born correct.
-2. **www is not redirected** to the apex: `server_name garden-ministries.org www.garden-ministries.org` share one server block
-   (canonical tags mitigate). The comment in `astro.config.mjs` claiming an Nginx www redirect is wrong. Fix needs root (separate change).
-3. **No `Cache-Control`/`Expires`** on any path (ETag/Last-Modified revalidation works). Safe later improvement (root console,
-   `nginx -t`, reload, separately authorized): `/_astro/` `public, max-age=31536000, immutable` (content-hashed names);
-   `/videos/` a short max-age (e.g. 7 days) unless video filenames are versioned, then long. Note `add_header` inside a
-   `location` replaces inherited headers.
-4. Nginx serves its default 404 page, not Astro's `404.html` (no `error_page`); the 404 page's language switch links to a
-   non-existent `/es/404`.
-5. `community-water-well.mp4` is heavier than needed (≈3 MB achievable) and its poster is unoptimized.
-6. `/get-involved` placeholder form (see proposal).
-7. Baseline commit not pushed to GitHub.
+1. **Not deployed:** production still serves the baseline; slash-less canonicals/links there still hit a 301 until `main` is released.
+2. **GitHub push blocked** (see Source ↔ production).
+3. **Testimonies have no captions/transcripts** (WCAG 1.2.2 gap) — need owner-provided transcripts or human transcription.
+4. `ce85921e` testimony pending a clean original (watermark).
+5. Founders photo is a photograph of a print; replace `src/assets/about/founders.jpg` if an original appears.
+6. **www is not redirected** to the apex (one Nginx server block). Fix needs root (separate change).
+7. **No `Cache-Control`/`Expires`** (ETag/Last-Modified work). Safe later (root, `nginx -t`, reload, separately authorized):
+   `/_astro/` `public, max-age=31536000, immutable`; `/videos/` long max-age is safe for `-vN` versioned files
+   (`community-water-well.mp4` is not versioned). `add_header` in a `location` replaces inherited headers.
+8. Nginx serves its default 404 page (no `error_page`); the Astro 404 page links to non-existent `/404/` and `/es/404/`.
+9. `/missions/` heading order jumps h1 → h3 (MissionCard titles) — pre-existing.
+10. `community-water-well.mp4` heavier than needed (≈3 MB achievable); its poster is unoptimized.
+11. `/get-involved/` placeholder form.

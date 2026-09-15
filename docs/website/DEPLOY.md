@@ -58,15 +58,20 @@ rsync -avz --delete --stats --exclude .DS_Store -e "$SSH" "$BUILD/dist/" $HOST:/
 $SSH $HOST 'cd /var/www/garden-ministries && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum' | diff - "$BUILD/manifest.sha256" && echo MANIFEST_MATCH
 # Ownership/modes: expect only garden:garden 644 (files) and 755 (dirs)
 $SSH $HOST 'find /var/www/garden-ministries -printf "%u:%g %m %y\n" | sort | uniq -c'
-# HTTP (while the trailing-slash issue exists, request the slash form)
-for p in / /about/ /missions/community-water/ /give/ /get-involved/ /es/ /es/give/ /sitemap-index.xml /robots.txt; do
+# HTTP: every generated URL ends in "/" and must answer 200
+for p in / /about/ /pray/ /missions/community-water/ /give/ /get-involved/ /es/ /es/pray/ /es/give/ /es/get-involved/ /sitemap-index.xml /robots.txt; do
   printf "%-32s " "$p"; curl -s -o /dev/null -w "%{http_code}\n" "https://garden-ministries.org$p"; done
+curl -s -o /dev/null -w "%{http_code} -> %{redirect_url}\n" https://garden-ministries.org/pray   # expect 301 -> /pray/
 curl -s https://garden-ministries.org/give/ | grep -c -i zeffy          # expect > 0 (also /es/give/)
-curl -s https://garden-ministries.org/about/ | grep -o '<link rel="canonical"[^>]*>'
+curl -s https://garden-ministries.org/pray/ | grep -o '<link rel="canonical"[^>]*>'   # expect .../pray/
+curl -s -o /dev/null -D - -H 'Range: bytes=0-99' https://garden-ministries.org/videos/testimonies/testimony-884e95be-v1.mp4 | grep -iE '^HTTP|content-type'  # expect 206 video/mp4
 ```
 
-Then check the changed pages in a browser (EN + ES, mobile width), and record: date/time, SHA, backup path, manifest
-result, checks run → `CHANGELOG.md`; update "Source ↔ production" in `CURRENT-STATE.md`.
+Then check the changed pages in a browser (EN + ES, mobile width) — including that the **Zeffy form renders** on `/give/`
+(it cannot be seen on localhost) and a testimony plays — and record: date/time, SHA, backup path, manifest result, checks
+run → `CHANGELOG.md`; update "Source ↔ production" in `CURRENT-STATE.md`.
+
+Expected `rsync --delete` deletions: only superseded content-hashed files under `_astro/`. Anything else → stop.
 
 ## Rollback
 
@@ -80,4 +85,5 @@ Alternative: redeploy the previous known-good SHA with the full procedure. Recor
 
 ## Housekeeping
 
-Each backup is ~15 MB. Prune old backups manually (keep at least the two most recent) and note it in `CHANGELOG.md`.
+Each backup is a full copy of the docroot (~15 MB for the baseline; ~32 MB once the testimony videos are live). Prune old
+backups manually (keep at least the two most recent) and note it in `CHANGELOG.md`.
