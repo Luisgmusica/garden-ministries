@@ -3,6 +3,39 @@
 Newest first. Times UTC. Reconstructed entries before 2026-09-15 cite their evidence; nothing here is inferred without it.
 Mail/server operations: parent project `docs/operations/CHANGELOG.md` (not in this repo).
 
+## 2026-09-15/16 — contact form deployed and made to deliver (`80a2e43`)
+
+- **23:33:21–23:33:29Z deploy of `80a2e43`.** Clean-clone build; server manifest = build (82 files); `garden:garden` 644/755.
+  Live `/get-involved/` and `/es/get-involved/` carry the sitekey, Turnstile script, hidden wrapper, `<noscript>` and the info@
+  fallback; privacy sections live in both languages; `/`, `/pray/`, `/give/` 200 with Zeffy intact.
+- Root side (not in the docroot rsync): `garden-contact` service on `127.0.0.1:8091`, `/etc/garden-contact` `0750
+  root:gardencontact`, secret installed from a staged file that was then `shred`ed, Nginx snippet + rate-limit zone.
+  Deployed `server.js` SHA matched the commit. The assistant never saw the secret.
+- **Turnstile widget failed to render (error 110200).** Cause: the domains were missing from the widget's Hostname Management.
+  Isolating test: Cloudflare's official *test* sitekey rendered and solved on the same live page, same host, same browser —
+  proving page, script and network were healthy and the fault was widget configuration. Owner added
+  `garden-ministries.org` and `www.garden-ministries.org` in the dashboard; widget then rendered and auto-solved in EN and ES.
+  No code change, no redeploy.
+- **Incident — every real submission failed (`delivery_failed`, exit 75, HTTP 503).** The unit's
+  `RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX` omitted `AF_NETLINK`; the spawned `sendmail` inherits that seccomp filter,
+  and Postfix's `sendmail` calls `getifaddrs()`, which opens a netlink socket. Journal evidence:
+  `postfix/sendmail: fatal: inet_addr_local[getifaddrs]: Address family not supported by protocol` (2026-09-16 00:07:22Z) and
+  `{"outcome":"delivery_failed","code":"exit_75"}` at 2026-09-16 00:07:10Z, 00:07:22Z (es) and 00:14:27Z (en). Turnstile verification
+  itself passed; nothing was ever queued (`mailq` empty). The 503 → "try again later" path behaved exactly as designed.
+- Ruled out along the way, with evidence: Origin/Nginx/siteverify all healthy (probe with a bogus token returned
+  403 `verify_failed`); `LIMITS.tokenMax` (probes: 2000 chars → 403, 2500/3000 → 400 `invalid`, but a measured real token is
+  ~750–799 chars, so the limit was never reached); Postfix policy (`authorized_submit_users` at its default `static:anyone`);
+  `sendmail`/`postdrop` permissions and the rest of the unit sandbox.
+- **Fix (owner-approved):** `AF_NETLINK` added to `RestrictAddressFamilies`. Alternative considered and declined: replacing
+  `sendmail` with a localhost SMTP client, which would have left the sandbox untouched at the cost of new code and a redeploy.
+  Applied 2026-09-16 00:24:49Z; effective setting `AF_INET AF_INET6 AF_NETLINK AF_UNIX`, `ActiveState=active`, `NRestarts=0`, service
+  re-listening with `"turnstileTestKeys":false`. Unit backed up before the edit.
+- **Verification: owner-confirmed, not server-log-confirmed.** The owner reports the message arrived at
+  `info@garden-ministries.org` with the expected subject and a working `Reply-To` to the visitor's address. The server-side
+  proof dump (`accepted` log line + Postfix/Dovecot delivery record) was offered but not run, so it is not recorded here.
+- Docs: `CONTACT-FORM.md` unit listing corrected with `AF_NETLINK` plus a comment saying why it must not be removed;
+  `CURRENT-STATE.md` updated (production now `80a2e43`, real form described, known issue 11 rewritten).
+
 ## 2026-09-15 — contact form audit (documentation only)
 
 - Read-only audit of the "Start a conversation" form (`GetInvolvedTemplate.astro`): no action/method, no backend, no email; JS

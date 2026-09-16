@@ -1,4 +1,4 @@
-# Website — current state (updated 2026-09-15, content round 1 live)
+# Website — current state (updated 2026-09-15, content round 1 + contact form live)
 
 Canonical memory for the public website. Read before any website work. Evidence (repo, server, live HTTP)
 wins over this file: if they disagree, verify, fix this file, and note it in `CHANGELOG.md`.
@@ -12,17 +12,18 @@ the repo in the parent project's `docs/operations/` and are not repeated here.
 | `DEPLOY.md` | The only supported deployment procedure + rollback |
 | `CONTENT-EXPANSION-PLAN.md` | Content round 1: decisions, what was implemented, what remains |
 | `CONTACT-INFO-PROPOSAL.md` | Proposal to publish info@ (not applied) |
-| `CONTACT-FORM-AUDIT.md` | Audit of the Get Involved form and recommended secure architecture (not implemented) |
+| `CONTACT-FORM-AUDIT.md` | Audit of the Get Involved form and the recommended secure architecture (implemented 2026-09-15) |
+| `CONTACT-FORM.md` | The contact endpoint as built: architecture, mail identity, root runbook, rollback |
 
 ## Source ↔ production
 
 | | Value |
 |---|---|
 | Repository | `garden-ministries-astro/` (git, branch `main`), remote `git@github.com:Luisgmusica/garden-ministries.git` |
-| **Production** | Build of **`73daed0`**. Nginx on garden-prod-01, docroot `/var/www/garden-ministries` (`garden:garden`, dirs 755 / files 644, 82 files, ~32 MB). Deploys 2026-09-15: content round 1 `580a2dc` at 19:25:34–19:29:47Z, founders photo `73daed0` at 19:57:31–19:57:36Z. Server manifest matched the build after each. |
-| Repo `main` | `73daed0` is live. Commits after it are post-deploy documentation only unless `CHANGELOG.md` says otherwise. |
-| Reproducibility | Clean clone of `73daed0` from GitHub → `npm ci` → `npm run build` = production byte-for-byte (82 files, manifest compared on the server). Docs commits do not change the build. |
-| GitHub | `origin/main` at `73daed0` verified after deploy (normal pushes, never forced). Pushing needs `~/.ssh/id_ed25519` in the SSH agent: it is passphrase-protected, so the operator runs `ssh-add --apple-use-keychain ~/.ssh/id_ed25519` in a real terminal. Server clone `~/apps/garden-ministries` is not used for deploys. |
+| **Production** | Build of **`80a2e43`**. Nginx on garden-prod-01, docroot `/var/www/garden-ministries` (`garden:garden`, dirs 755 / files 644, 82 files, ~32 MB). Deploys 2026-09-15: content round 1 `580a2dc` at 19:25:34–19:29:47Z, founders photo `73daed0` at 19:57:31–19:57:36Z, contact form `80a2e43` at 23:33:21–23:33:29Z. Server manifest matched the build after each. Plus the root-side `garden-contact` service under `/opt/garden-contact` (not part of the docroot rsync — see `CONTACT-FORM.md`). |
+| Repo `main` | `80a2e43` is live. Commits after it are post-deploy documentation only unless `CHANGELOG.md` says otherwise. |
+| Reproducibility | Clean clone of `80a2e43` from GitHub → `npm ci` → `npm run build` = production byte-for-byte (82 files, manifest compared on the server). Docs commits do not change the build. |
+| GitHub | `origin/main` at `80a2e43` verified after deploy (normal pushes, never forced). Pushing needs `~/.ssh/id_ed25519` in the SSH agent: it is passphrase-protected, so the operator runs `ssh-add --apple-use-keychain ~/.ssh/id_ed25519` in a real terminal. Server clone `~/apps/garden-ministries` is not used for deploys. |
 
 Rule: deploy only a committed SHA built from a clean clone (`DEPLOY.md`).
 
@@ -34,7 +35,7 @@ Rule: deploy only a committed SHA built from a clean clone (`DEPLOY.md`).
 - Components: `Header`, `Footer`, `PageHero`, `MissionCard`, `Icon` (inline SVG set, incl. `play`), `ZeffyDonationForm`,
   `TestimoniesSection`, `TestimonyVideo`.
 - Data: `missions.ts` (3 missions), `prayer.ts` (Pray With Us content), `testimonies.ts` (testimony videos),
-  `organization.ts` (mailing address). Copy: `src/i18n/ui.ts` (keyed `en`/`es` per page).
+  `organization.ts` (mailing address, contact email, public Turnstile sitekey). Copy: `src/i18n/ui.ts` (keyed `en`/`es` per page).
 - `scripts/media/encode-video.swift`: macOS web-video encoder (no npm dependency).
 - `content-source/` is tracked reference material, not built into the site.
 - Brand tokens in `src/styles/global.css`: forest `#17352c`, cream `#f7f2e8`, clay `#a85234`, sage `#dfe7da`, gold `#d2a862`;
@@ -119,8 +120,14 @@ untouched. Posters are frames from the encodes (`src/assets/testimonies/`). Capt
   Meridian, ID 83642. Shown in `<address>` with label "Mailing address" / "Dirección postal" and note "For mail only — not a
   visitor location." / "Solo para correspondencia; no es una oficina abierta al público." on `/get-involved/` (EN/ES, in the
   contact panel) and in the footer "Connect" column, which no longer shows the "Idaho, USA" map pin.
-- `/get-involved/` "Start a conversation" form is a **placeholder**: no action/method and no backend; its script fakes a success
-  message; without JavaScript it submits a GET that puts name/email/message in the URL. See `CONTACT-FORM-AUDIT.md`. No email or phone published.
+- `/get-involved/` **"Start a conversation" form is real** (EN/ES, live since 2026-09-15 23:33Z). `method="post"` to
+  `/api/contact`, Cloudflare Turnstile (managed, sitekey in `organization.ts`, secret only in `/etc/garden-contact/env`),
+  honeypot, server-side validation and rate limits; success is shown **only** after the server accepts the message for
+  delivery. Delivered by the localhost-only `garden-contact` Node service to `info@garden-ministries.org` with a fixed
+  From/To/Subject and the visitor's validated address in `Reply-To`. Without JavaScript the form stays hidden and a
+  `<noscript>` note offers info@, so nothing can reach a URL. Full architecture and runbook: `CONTACT-FORM.md`.
+- **`info@garden-ministries.org` is published** on `/get-involved/` (EN/ES) as the fallback when the form cannot be used.
+  No phone number and no personal address is published.
 
 ## Source material authority (owner decisions, 2026-09-15)
 
@@ -161,5 +168,12 @@ Isrrael's phone, personal email, title or name from the Connect graphic are **no
 8. Nginx serves its default 404 page (no `error_page`); the Astro 404 page links to non-existent `/404/` and `/es/404/`.
 9. `/missions/` heading order jumps h1 → h3 (MissionCard titles) — pre-existing.
 10. `community-water-well.mp4` heavier than needed (≈3 MB achievable); its poster is unoptimized.
-11. `/get-involved/` form shows a false success and, without JavaScript, leaks its fields into the URL, browser history and the
-    Nginx access log. Audit and recommended fix: `CONTACT-FORM-AUDIT.md` (not implemented).
+11. **`AF_NETLINK` must stay in the unit's `RestrictAddressFamilies`.** Postfix's `sendmail` calls `getifaddrs()`, which opens
+    a netlink socket, and the spawned process inherits the service's seccomp filter. Without it `sendmail` dies with
+    `inet_addr_local[getifaddrs]: Address family not supported by protocol` and exits 75, so **every** submission fails as
+    `delivery_failed` / 503 while Turnstile verification still passes and nothing is queued (`mailq` stays empty). This is
+    exactly what happened on 2026-09-16 between 00:07Z and 00:24Z; see `CHANGELOG.md`. Do not "harden" it back out.
+12. **Contact form delivery is owner-verified, not server-log-verified.** The owner confirmed on 2026-09-16 that a real
+    submission reached info@ with the expected subject and a working `Reply-To`. The server-side proof (an `accepted` log
+    line plus the Postfix/Dovecot delivery record) was offered but never captured, so no evidence of a successful delivery
+    exists in this repo. Worth capturing on the next real message: `journalctl -u garden-contact` needs root.

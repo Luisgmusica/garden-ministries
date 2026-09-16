@@ -83,6 +83,13 @@ Turnstile → Add widget → name "Garden Ministries contact form" → hostnames
 → widget mode **Managed** → no pre-clearance. Copy the **Site Key** (public — may be shared and is committed to git) and keep the
 **Secret Key** private: it is typed only into the server during runbook block A (never in chat, git or email).
 
+The hostnames are not optional and are easy to get wrong. If Hostname Management is empty, or holds a typo such as
+`gardenministries.org` (no hyphen), a full URL or a trailing slash, the widget never renders and the browser console repeats
+`[Cloudflare Turnstile] Error: 110200` ("Domain not authorized"). This happened on 2026-09-15. To tell a widget
+misconfiguration apart from a page or network fault, render Cloudflare's official **test** sitekey
+`1x00000000000000000000AA` on the same page: if that one solves, the page, the script and the network are fine and the fault
+is in the widget's settings. Fixing it needs no code change and no redeploy.
+
 ## Root runbook (Hetzner root console)
 
 Prerequisites: the approved commit is staged by the assistant in `/home/garden/contact-staging/` with `SHA256SUMS`.
@@ -125,7 +132,10 @@ ProtectSystem=full
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 ProtectControlGroups=yes
-RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+# AF_NETLINK is required: Postfix's sendmail calls getifaddrs(), which opens a netlink socket.
+# Without it sendmail dies with "inet_addr_local[getifaddrs]: Address family not supported by
+# protocol" and exits 75, so every submission fails as delivery_failed / 503. Do not remove it.
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
 RestrictRealtime=yes
 LockPersonality=yes
 MemoryMax=128M
